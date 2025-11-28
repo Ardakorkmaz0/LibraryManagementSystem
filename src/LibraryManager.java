@@ -39,6 +39,19 @@ public class LibraryManager {
         titleTree.addByTitle(book);
         authorTree.addByAuthor(book);
     }
+
+    public void addBookGUI(String title, String author) {   // this method is for the GUI, it takes parameters directly
+        //trimming the spaces and making it lowercase to avoid errors
+        String cleanTitle = title.trim().toLowerCase();
+        String cleanAuthor = author.trim().toLowerCase();
+        // creating a new book object with the given inputs
+        Book book = new Book(cleanTitle, cleanAuthor);
+        // adding the new book to both title and author BSTs
+        titleTree.addByTitle(book);
+        authorTree.addByAuthor(book);
+        // printing to console just to check if it works
+        System.out.println("Book added successfully: " + cleanTitle);
+    }
     
     
 }
