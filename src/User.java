@@ -8,7 +8,7 @@ public class User {
     private int age;
     sll history = new sll();
     
-    private int counter = 0;
+    private static int counter = 0;
     
     public User(){ // default constructor
         this.name = null;

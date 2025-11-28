@@ -5,8 +5,17 @@ public interface UndoAction { // the goal of this interface is pushing recovable
 }
 
 class undoAddBook implements UndoAction{
+    
+    private LibraryManager lib;
+    private Book book;
+    
+    public undoAddBook(LibraryManager lib, Book book){
+        this.lib = lib;
+        this.book = book;
+    }
+    
     @Override
     public void undo() {
-        
+        lib.r
     }
 }

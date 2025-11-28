@@ -40,7 +40,6 @@ class bst { // binary search tree operations
     public bst(){
         root = null;
     }
-    
 }
 
 class idBst extends bst {
@@ -55,16 +54,15 @@ class idBst extends bst {
         else{
             User current = (User) node.data;
             if(user.getId().compareToIgnoreCase(current.getId()) < 0) {
-                insertUserId(node.left, user);
+                node.left = insertUserId(node.left, user);
             }
             else{
-                insertUserId(node.right, user);
+                node.right = insertUserId(node.right, user);
             }
         }
         return node;
     }
 }
-
 class nameBst extends bst {
     void addByName(User user){
         root = insertUserName(root, user);
@@ -77,16 +75,15 @@ class nameBst extends bst {
         else{
             User current = (User) node.data;
             if(user.getName().compareToIgnoreCase(current.getName()) < 0) {
-                insertUserName(node.left, user);
+                node.left = insertUserName(node.left, user);
             }
             else{
-                insertUserName(node.right, user);
+                node.right = insertUserName(node.right, user);
             }
         }
         return node;
     }
 }
-
 class authorBst extends bst {
     void addByAuthor(Book book){
         root = insertBookAuthor(root, book);
@@ -99,16 +96,15 @@ class authorBst extends bst {
         else{
             Book current = (Book) node.data;
             if(book.getAuthor().compareToIgnoreCase(current.getAuthor()) < 0) {
-                insertBookAuthor(node.left, book);
+                node.left = insertBookAuthor(node.left, book);
             }
             else{
-                insertBookAuthor(node.right, book);
+                node.right = insertBookAuthor(node.right, book);
             }
         }
         return node;
     }
 }
-
 class titleBst extends bst {
     void addByTitle(Book book){
         root = insertBookTitle(root, book);
@@ -121,10 +117,10 @@ class titleBst extends bst {
         else{
             Book current = (Book) node.data;
             if(book.getTitle().compareToIgnoreCase(current.getTitle()) < 0) {
-                insertBookTitle(node.left, book);
+                node.left = insertBookTitle(node.left, book);
             }
             else{
-                insertBookTitle(node.right, book);
+                node.right = insertBookTitle(node.right, book);
             }
         }
         return node;

@@ -7,10 +7,11 @@ public class LibraryManager {
     private titleBst titleTree = new titleBst();
     private authorBst authorTree = new authorBst();
     
+    Scanner input = new Scanner(System.in);
+    
     void addBook(){ // adding book to library
         System.out.println("Adding Book System");
         System.out.println("---------------------------------");
-        Scanner input = new Scanner(System.in);
         String title;
         System.out.println("Enter book's title : ");
         while(true){
@@ -38,5 +39,6 @@ public class LibraryManager {
         titleTree.addByTitle(book);
         authorTree.addByAuthor(book);
     }
+    
     
 }
