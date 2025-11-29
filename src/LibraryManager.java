@@ -134,4 +134,10 @@ public class LibraryManager {
         titleTree.delete(book.getTitle());
         authorTree.delete(book.getAuthor(), book.getTitle());
     }
+    
+    // Inorder showing (sorted alphabetic) the books
+    void showLibrary(){
+         titleTree.showAlphabetic();
+    }
+    
 }

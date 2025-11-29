@@ -336,6 +336,33 @@ class titleBst extends bst {
         // Key is larger than root's key
         return searchRec(root.right, title);
     }
+    
+    public void showAlphabetic(){
+        if(root == null){
+            System.out.println("The library is empty.");
+            return;
+        }
+        Book book = (Book) root.data;
+        inOrder(root, book);
+    }
+    
+    private void inOrder(bstNode node, Book book){
+        int count = 0;
+        if(node.left != null) {
+            book = (Book) node.left.data;
+            inOrder(node.left, book);
+        }
+        if(count == 5){
+            System.out.println();
+        }
+        System.out.print(book.getTitle() + "  |  ");
+        count++;
+        if(node.right != null) {
+            book = (Book) node.right.data;
+            inOrder(node.right, book);
+        }
+    }
+    
 }
 
 

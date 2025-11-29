@@ -9,11 +9,13 @@ public class LibraryManagementSystem {
         LibraryManager lib = new LibraryManager(); // construct a library
         Scanner sc = new Scanner(System.in);
 
+        lib.showLibrary();
+        
         boolean isRunning = true;
 
         // Loop to keep the menu active
         while (isRunning) {
-            System.out.println("\n--- Main Menu ---");
+            System.out.println("--- Main Menu ---");
             System.out.println("1 - Add Book (Open UI)");
             System.out.println("2 - Remove Book (Open UI)");
             System.out.println("3 - Search Book (Open UI)");
@@ -60,7 +62,9 @@ public class LibraryManagementSystem {
                 sc.next(); // Consume invalid input to prevent infinite loop
             }
         }
-
+        
+        lib.showLibrary();
+        
         sc.close();
 
     }
