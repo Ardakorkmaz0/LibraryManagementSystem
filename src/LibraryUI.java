@@ -9,58 +9,83 @@ public class LibraryUI extends JFrame {
 
     LibraryManager lib;
 
-    public LibraryUI(LibraryManager lib) {
+    public LibraryUI(LibraryManager lib, int option) {
         this.lib = lib;
-
-        // setting the window properties
-        setTitle("Library System");
-        setSize(300, 300);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null); // center the window
-
-        // using flow layout because it is simple
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setLocationRelativeTo(null);
         setLayout(new FlowLayout());
 
-        // creating labels and text fields
-        JLabel l1 = new JLabel("Book Title:");
-        JTextField t1 = new JTextField(20); // length of the text field
+        if (option == 1) {
+            setTitle("Add Book");
+            setSize(300, 300);
+            initAddBookUI();
+        } else if (option == 2) {
+            setTitle("Remove Book");
+            setSize(300, 200);
+            initRemoveBookUI();
+        }
+        setVisible(true);
+    }
 
-        JLabel l2 = new JLabel("Author Name:");
-        JTextField t2 = new JTextField(20);
+    private void initAddBookUI() {
+        JLabel lTitle = new JLabel("Book Title:");
+        JTextField tTitle = new JTextField(20);
+        JLabel lAuthor = new JLabel("Author Name:");
+        JTextField tAuthor = new JTextField(20);
+        JButton bAdd = new JButton("Add Book");
 
-        JButton b1 = new JButton("Add Book");
-
-        // action listener for the button
-        b1.addActionListener(new ActionListener() {
+        bAdd.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // getting text from fields
-                String s1 = t1.getText();
-                String s2 = t2.getText();
+                String title = tTitle.getText();
+                String author = tAuthor.getText();
 
-                // checking if fields are empty
-                if(s1.equals("") || s2.equals("")) {
-                    JOptionPane.showMessageDialog(null, "Fill all fields");
-                } else {
-                    // calling the add method
-                    lib.addBookGUI(s1, s2);
-                    JOptionPane.showMessageDialog(null, "Book Added!");
+                if(title.isEmpty() || author.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Please fill all fields!");
+                }
+                else {
+                    // UPDATED: Now calling the unified addBook method
+                    lib.addBook(title, author);
 
-                    // clearing the inputs
-                    t1.setText("");
-                    t2.setText("");
+                    JOptionPane.showMessageDialog(null, "Book Added Successfully!");
+                    tTitle.setText("");
+                    tAuthor.setText("");
                 }
             }
         });
 
-        // adding components to the frame
-        add(l1);
-        add(t1);
-        add(l2);
-        add(t2);
-        add(b1);
+        add(lTitle); add(tTitle);
+        add(lAuthor); add(tAuthor);
+        add(bAdd);
+    }
 
-        // making the window visible
-        setVisible(true);
+    private void initRemoveBookUI() {
+        JLabel lTitle = new JLabel("Enter Title to Delete:");
+        JTextField tTitle = new JTextField(20);
+        JButton bRemove = new JButton("Remove Book");
+
+        bRemove.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String title = tTitle.getText();
+
+                if (title.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Please enter a title!");
+                } else {
+                    // UPDATED: Calling the simplified file removal method
+                    boolean success = lib.removeBookFromFile(title);
+
+                    if (success) {
+                        JOptionPane.showMessageDialog(null, "Book Removed Successfully!");
+                        tTitle.setText("");
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Error: Book not found.");
+                    }
+                }
+            }
+        });
+
+        add(lTitle); add(tTitle);
+        add(bRemove);
     }
 }
