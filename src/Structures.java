@@ -1,31 +1,109 @@
 package librarymanagementsystem;
 
 class sllNode { // single linked list nodes
-
     sllNode next;
     Object data;
-
     public sllNode(Object data){
         this.data = data;
         this.next = null;
     }
 }
-
 class sll { // single linked list operations
-
     sllNode head;
-
     public sll(){
         head = null;
     }
 }
+// Requirement: Use for high-speed retrieval of unique records (e.g., ID lookups)
+class HashNode {
+    String key;   // Unique ID (Book ID or User ID)
+    Object value; // Stored Object (Book or User)
+    HashNode next; // Pointer for handling collisions (Chaining)
+    public HashNode(String key, Object value) {
+        this.key = key;
+        this.value = value;
+        this.next = null;
+    }
+}
+class HashTable { // Hash Table operations with Chaining
+    private HashNode[] buckets;
+    private int capacity; // Size of the array
+    private int size;
+    public HashTable(int capacity) {
+        this.capacity = capacity;
+        this.buckets = new HashNode[capacity];
+        this.size = 0;
+    }
+    // Hash function to convert key string to index
+    private int getBucketIndex(String key) {
+        int hashCode = key.hashCode();
+        int index = hashCode % capacity;
+        // Ensure index is positive
+        return index < 0 ? index * -1 : index;
+    }
+    // Insert key-value pair (O(1) average case)
+    public void put(String key, Object value) {
+        int index = getBucketIndex(key);
+        HashNode head = buckets[index];
+
+        // Check if key already exists, update value if so
+        while (head != null) {
+            if (head.key.equals(key)) {
+                head.value = value;
+                return;
+            }
+            head = head.next;
+        }
+        // Insert new node at the beginning of the chain (Collision handling)
+        size++;
+        head = buckets[index];
+        HashNode newNode = new HashNode(key, value);
+        newNode.next = head;
+        buckets[index] = newNode;
+    }
+    // Retrieve value by key average case
+    public Object get(String key) {
+        int index = getBucketIndex(key);
+        HashNode head = buckets[index];
+
+        // Traverse the chain to find the key
+        while (head != null) {
+            if (head.key.equals(key)) {
+                return head.value;
+            }
+            head = head.next;
+        }
+        return null; // Key not found
+    }
+    // Remove value by key
+    public Object remove(String key) {
+        int index = getBucketIndex(key);
+        HashNode head = buckets[index];
+        HashNode prev = null;
+
+        while (head != null) {
+            if (head.key.equals(key)) {
+                break;
+            }
+            prev = head;
+            head = head.next;
+        }
+        if (head == null) return null; // Key not found
+
+        size--;
+        if (prev != null) {
+            prev.next = head.next;
+        } else {
+            buckets[index] = head.next;
+        }
+        return head.value;
+    }
+}
 
 class bstNode { // binary search tree nodes
-
     Object data;
     bstNode left;
     bstNode right;
-
     public bstNode(Object data){
         this.data = data;
         this.left = null;
@@ -34,35 +112,13 @@ class bstNode { // binary search tree nodes
 }
 
 class bst { // binary search tree operations
-
     bstNode root;
-
     public bst(){
         root = null;
     }
 }
 
-class idBst extends bst {
-    void addById(User user) {
-        root = insertUserId(root, user);
-        // in here, push a stack of reverse this method for undo
-    }
-    private bstNode insertUserId(bstNode node, User user){
-        if(node == null) {
-            return new bstNode(user);
-        }
-        else{
-            User current = (User) node.data;
-            if(user.getId().compareToIgnoreCase(current.getId()) < 0) {
-                node.left = insertUserId(node.left, user);
-            }
-            else{
-                node.right = insertUserId(node.right, user);
-            }
-        }
-        return node;
-    }
-}
+// NOTE: idBst class removed because Hash Table is required for ID lookups.
 class nameBst extends bst {
     void addByName(User user){
         root = insertUserName(root, user);
@@ -105,7 +161,7 @@ class authorBst extends bst {
         return node;
     }
 
-    // --- NEW: Delete method for Author Tree ---
+    // --- Delete method for Author Tree ---
     // Needed by LibraryManager to remove book by Author
     public void delete(String author, String title) {
         root = deleteRec(root, author, title);
@@ -130,9 +186,7 @@ class authorBst extends bst {
                 root.right = deleteRec(root.right, author, title);
                 return root;
             }
-
             // Node found. Perform deletion.
-
             // Case 1: No children or one child
             if (root.left == null) return root.right;
             else if (root.right == null) return root.left;
@@ -146,7 +200,6 @@ class authorBst extends bst {
         }
         return root;
     }
-
     // Helper to find minimum value node
     private Object minValue(bstNode root) {
         Object minv = root.data;
@@ -157,8 +210,10 @@ class authorBst extends bst {
         return minv;
     }
 }
-
 class titleBst extends bst {
+
+
+
     void addByTitle(Book book){
         root = insertBookTitle(root, book);
         // in here, push a stack of reverse this method for undo
@@ -179,24 +234,22 @@ class titleBst extends bst {
         return node;
     }
 
-    // --- NEW: Delete method for Title Tree ---
+
+
+    // --- Delete method for Title Tree ---
     // Needed by LibraryManager to remove book by Title
     public void delete(String title) {
         root = deleteRec(root, title);
     }
-
     private bstNode deleteRec(bstNode root, String title) {
         if (root == null) return root;
-
         Book current = (Book) root.data;
-
         if (title.compareToIgnoreCase(current.getTitle()) < 0) {
             root.left = deleteRec(root.left, title);
         } else if (title.compareToIgnoreCase(current.getTitle()) > 0) {
             root.right = deleteRec(root.right, title);
         } else {
             // Node found. Perform deletion.
-
             // Case 1: No children or one child
             if (root.left == null) return root.right;
             else if (root.right == null) return root.left;
@@ -210,7 +263,6 @@ class titleBst extends bst {
         }
         return root;
     }
-
     // Helper to find minimum value node
     private Object minValue(bstNode root) {
         Object minv = root.data;
@@ -220,7 +272,39 @@ class titleBst extends bst {
         }
         return minv;
     }
+
+
+
+
+    // --- Search Method ---
+    public Book search(String title) {
+        return searchRec(root, title);
+    }
+    private Book searchRec(bstNode root, String title) {
+        // Base case: root is null or key is present at root
+        if (root == null) {
+            return null;
+        }
+
+        Book current = (Book) root.data;
+
+        // Compare title with root's title
+        if (current.getTitle().equalsIgnoreCase(title)) {
+            return current;
+        }
+
+        // Key is smaller than root's key
+        if (title.compareToIgnoreCase(current.getTitle()) < 0) {
+            return searchRec(root.left, title);
+        }
+
+        // Key is larger than root's key
+        return searchRec(root.right, title);
+    }
 }
+
+
+
 
 class queue { // queue operations
 
@@ -232,11 +316,8 @@ class queue { // queue operations
         rear = null;
     }
 }
-
 class stack {
-
     sllNode top;
-
     public stack(){
         top = null;
     }

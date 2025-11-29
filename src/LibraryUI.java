@@ -23,6 +23,10 @@ public class LibraryUI extends JFrame {
             setTitle("Remove Book");
             setSize(300, 200);
             initRemoveBookUI();
+        } else if (option == 3) { // New option for Search
+            setTitle("Search Book");
+            setSize(300, 200);
+            initSearchBookUI();
         }
         setVisible(true);
     }
@@ -44,12 +48,17 @@ public class LibraryUI extends JFrame {
                     JOptionPane.showMessageDialog(null, "Please fill all fields!");
                 }
                 else {
-                    // UPDATED: Now calling the unified addBook method
-                    lib.addBook(title, author);
+                    // UPDATED: Now calling the unified addBook method which returns boolean
+                    boolean isAdded = lib.addBook(title, author);
 
-                    JOptionPane.showMessageDialog(null, "Book Added Successfully!");
-                    tTitle.setText("");
-                    tAuthor.setText("");
+                    if (isAdded) {
+                        JOptionPane.showMessageDialog(null, "Book Added Successfully!");
+                        tTitle.setText("");
+                        tAuthor.setText("");
+                    } else {
+                        // If returns false, it means duplicate exists
+                        JOptionPane.showMessageDialog(null, "Error: This book already exists in the library!", "Duplicate Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
             }
         });
@@ -72,7 +81,7 @@ public class LibraryUI extends JFrame {
                 if (title.isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Please enter a title!");
                 } else {
-                    // UPDATED: Calling the simplified file removal method
+                    // Calling the simplified file removal method
                     boolean success = lib.removeBookFromFile(title);
 
                     if (success) {
@@ -87,5 +96,39 @@ public class LibraryUI extends JFrame {
 
         add(lTitle); add(tTitle);
         add(bRemove);
+    }
+
+    // --- NEW: Search Book UI Initialization ---
+    private void initSearchBookUI() {
+        JLabel lTitle = new JLabel("Enter Title to Search:");
+        JTextField tTitle = new JTextField(20);
+        JButton bSearch = new JButton("Search Book");
+
+        bSearch.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String title = tTitle.getText();
+                if (title.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Please enter a title!");
+                }
+                else {
+                    // Call the search method from LibraryManager
+                    Book foundBook = lib.searchBook(title);
+
+                    if (foundBook != null) {
+                        // Display book details if found
+                        String message = "Book Found!\n" +
+                                "Title: " + foundBook.getTitle() + "\n" +
+                                "Author: " + foundBook.getAuthor();
+                        JOptionPane.showMessageDialog(null, message, "Search Result", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Error: Book not found in the library.", "Search Result", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }
+        });
+        add(lTitle);
+        add(tTitle);
+        add(bSearch);
     }
 }

@@ -21,6 +21,7 @@ public class LibraryManagementSystem {
             System.out.println("\n--- Main Menu ---");
             System.out.println("1 - Add Book (Open UI)");
             System.out.println("2 - Remove Book (Open UI)");
+            System.out.println("3 - Search Book (Open UI)");
             System.out.println("0 - Exit");
             System.out.print("Select an option: ");
 
@@ -43,6 +44,13 @@ public class LibraryManagementSystem {
                         new LibraryUI(lib, 2);
                     });
 
+                }
+                else if (option == 3) {
+                    System.out.println("Launching Search Book Window...");
+                    // Open UI in mode 3
+                    SwingUtilities.invokeLater(() -> {
+                        new LibraryUI(lib, 3);
+                    });
                 }
                 else if (option == 0) {
                     System.out.println("Exiting system...");

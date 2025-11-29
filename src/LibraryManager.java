@@ -41,28 +41,39 @@ public class LibraryManager {
     // --- METHOD 2: CORE LOGIC (USED BY GUI AND CONSOLE) ---
     // This method takes parameters directly.
     // It updates the BSTs and saves to the file.
-    public void addBook(String title, String author) {
+    // Returns true if added successfully, false if duplicate
+    public boolean addBook(String title, String author) {
         String cleanTitle = title.trim().toLowerCase();
         String cleanAuthor = author.trim().toLowerCase();
 
-        // 1. Create Object
+        // 1. Check if book already exists
+        // NOTE: Make sure you added the 'search' method to titleBst as discussed before.
+        if (titleTree.search(cleanTitle) != null) {
+            System.out.println("Error: Book '" + cleanTitle + "' already exists.");
+            return false; // Duplicate found, do not add
+        }
+
+        // 2. Create Object
         Book book = new Book(cleanTitle, cleanAuthor);
 
-        // 2. Add to Memory (BSTs)
+        // 3. Add to Memory (BSTs)
         titleTree.addByTitle(book);
         authorTree.addByAuthor(book);
 
-        // 3. Save to File (Appends to the end of txt)
+        // 4. Save to File (Appends to the end of txt)
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME, true))) {
             writer.write(cleanTitle + "," + cleanAuthor);
             writer.newLine();
         } catch (IOException e) {
             System.out.println("Error saving to file: " + e.getMessage());
+            return false;
         }
 
         System.out.println("Success: Book added -> " + cleanTitle);
+        return true;
     }
 
+    //  --- METHOD 3 : RemoveBook from tree
     // --- REMOVE METHOD (Reads all lines, skips the one to delete, rewrites file) ---
     public boolean removeBookFromFile(String titleInput) {
         String titleToRemove = titleInput.trim().toLowerCase();
@@ -103,5 +114,11 @@ public class LibraryManager {
             }
         }
         return false;
+    }
+
+    // --- METHOD 3:  SearchBook from tree
+    public Book searchBook(String title) {
+        // Search in the BST
+        return titleTree.search(title.trim());
     }
 }
