@@ -9,6 +9,7 @@ public class LibraryManager {
     private titleBst titleTree = new titleBst();
     private authorBst authorTree = new authorBst();
     private static final String FILE_NAME = "library_books.txt"; // File to save books
+    private UndoManager undoManager = new UndoManager();
 
     Scanner input = new Scanner(System.in);
 
@@ -70,7 +71,11 @@ public class LibraryManager {
         }
 
         System.out.println("Success: Book added -> " + cleanTitle);
+        // Add to UndoManager the add operation.
+        undoManager.addAction(new undoAddBook(this, book));
         return true;
+        
+        
     }
 
     //  --- METHOD 3 : RemoveBook from tree
@@ -123,5 +128,10 @@ public class LibraryManager {
     }
     public String searchByAuthor(String author) {
         return authorTree.searchBooks(author.trim());
+    }
+    
+    void removeBook(Book book){
+        titleTree.delete(book.getTitle());
+        authorTree.delete(book.getAuthor(), book.getTitle());
     }
 }

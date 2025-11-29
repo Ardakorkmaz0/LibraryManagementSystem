@@ -8,14 +8,12 @@ class sllNode { // single linked list nodes
         this.next = null;
     }
 }
-
 class sll { // single linked list operations
     sllNode head;
     public sll(){
         head = null;
     }
 }
-
 // Requirement: Use for high-speed retrieval of unique records (e.g., ID lookups)
 class HashNode {
     String key;   // Unique ID (Book ID or User ID)
@@ -27,7 +25,6 @@ class HashNode {
         this.next = null;
     }
 }
-
 class HashTable { // Hash Table operations with Chaining
     private HashNode[] buckets;
     private int capacity; // Size of the array
@@ -143,11 +140,10 @@ class nameBst extends bst {
         return node;
     }
 }
-
 class authorBst extends bst {
+    
     void addByAuthor(Book book){
         root = insertBookAuthor(root, book);
-        // in here, push a stack of reverse this method for undo
     }
     private bstNode insertBookAuthor(bstNode node, Book book){
         if(node == null) {
@@ -213,7 +209,7 @@ class authorBst extends bst {
         }
         return minv;
     }
-
+    
     // Returns a formatted string of all books found for that author
     public String searchBooks(String author) {
         StringBuilder result = new StringBuilder();
@@ -222,7 +218,7 @@ class authorBst extends bst {
         if (result.length() == 0) return null; // No books found
         return result.toString();
     }
-
+    
     private void searchRec(bstNode root, String author, StringBuilder sb) {
         if (root == null) return;
 
@@ -246,7 +242,12 @@ class authorBst extends bst {
     }
 }
 
+
+
+
 class titleBst extends bst {
+
+
 
     void addByTitle(Book book){
         root = insertBookTitle(root, book);
@@ -267,6 +268,8 @@ class titleBst extends bst {
         }
         return node;
     }
+
+
 
     // --- Delete method for Title Tree ---
     // Needed by LibraryManager to remove book by Title
@@ -305,6 +308,9 @@ class titleBst extends bst {
         return minv;
     }
 
+
+
+
     // --- Search Method ---
     public Book search(String title) {
         return searchRec(root, title);
@@ -332,6 +338,9 @@ class titleBst extends bst {
     }
 }
 
+
+
+
 class queue { // queue operations
 
     sllNode front;
@@ -342,7 +351,6 @@ class queue { // queue operations
         rear = null;
     }
 }
-
 class stack {
     sllNode top;
     public stack(){
@@ -368,5 +376,13 @@ class stack {
             size++;
         }
         return size;
+    }
+    
+    void deleteFifth(){
+        sllNode curr = top;
+        for(int i = 1; i < 4; i++){
+            curr = curr.next;
+        }
+        curr.next = null;
     }
 }

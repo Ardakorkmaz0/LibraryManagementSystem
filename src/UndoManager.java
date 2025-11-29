@@ -2,11 +2,15 @@ package librarymanagementsystem;
 
 public class UndoManager {
     
-    private stack lastActions = new stack();
+    public stack lastActions = new stack();
     final int capacity = 5;
     
-    void addAction(UndoAction action) {
+    public void addAction(UndoAction action) {
         if(lastActions.size() < capacity){
+            lastActions.push(action);
+        }
+        else if(lastActions.size() >= capacity){
+            lastActions.deleteFifth();
             lastActions.push(action);
         }
     }

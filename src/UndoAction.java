@@ -16,6 +16,7 @@ class undoAddBook implements UndoAction{
     
     @Override
     public void undo() {
-        lib.r
+        lib.removeBook(book);
+        System.out.println("The operation undo is completed.");
     }
-}
+} 
