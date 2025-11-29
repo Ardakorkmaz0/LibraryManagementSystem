@@ -16,14 +16,14 @@ public class LibraryUI extends JFrame {
         setLayout(new FlowLayout());
 
         if (option == 1) {
-            setTitle("Add Book");
+            setTitle("Add Book"); // Option for add book
             setSize(300, 300);
             initAddBookUI();
-        } else if (option == 2) {
+        } else if (option == 2) { // Option for remove book
             setTitle("Remove Book");
             setSize(300, 200);
             initRemoveBookUI();
-        } else if (option == 3) { // New option for Search
+        } else if (option == 3) { // Option for search book
             setTitle("Search Book");
             setSize(350, 150); // Adjusted size for two buttons
             initSearchBookUI();
@@ -32,6 +32,7 @@ public class LibraryUI extends JFrame {
     }
 
     private void initAddBookUI() {
+
         JLabel lTitle = new JLabel("Book Title:");
         JTextField tTitle = new JTextField(20);
         JLabel lAuthor = new JLabel("Author Name:");
@@ -48,9 +49,8 @@ public class LibraryUI extends JFrame {
                     JOptionPane.showMessageDialog(null, "Please fill all fields!");
                 }
                 else {
-                    // UPDATED: Now calling the unified addBook method
+                    //Calling the unified addBook method
                     boolean isAdded = lib.addBook(title, author);
-
                     if (isAdded) {
                         JOptionPane.showMessageDialog(null, "Book Added Successfully!");
                         tTitle.setText("");
@@ -62,7 +62,6 @@ public class LibraryUI extends JFrame {
                 }
             }
         });
-
         add(lTitle); add(tTitle);
         add(lAuthor); add(tAuthor);
         add(bAdd);
@@ -93,12 +92,11 @@ public class LibraryUI extends JFrame {
                 }
             }
         });
-
         add(lTitle); add(tTitle);
         add(bRemove);
     }
 
-    // --- NEW: Search Book UI Initialization (Split into Title and Author) ---
+    // Search Book UI Initialization (Split into Title and Author)
     private void initSearchBookUI() {
         JLabel lInfo = new JLabel("Select Search Method:");
 
