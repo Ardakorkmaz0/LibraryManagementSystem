@@ -121,4 +121,7 @@ public class LibraryManager {
         // Search in the BST
         return titleTree.search(title.trim());
     }
+    public String searchByAuthor(String author) {
+        return authorTree.searchBooks(author.trim());
+    }
 }

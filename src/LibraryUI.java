@@ -25,7 +25,7 @@ public class LibraryUI extends JFrame {
             initRemoveBookUI();
         } else if (option == 3) { // New option for Search
             setTitle("Search Book");
-            setSize(300, 200);
+            setSize(350, 150); // Adjusted size for two buttons
             initSearchBookUI();
         }
         setVisible(true);
@@ -48,7 +48,7 @@ public class LibraryUI extends JFrame {
                     JOptionPane.showMessageDialog(null, "Please fill all fields!");
                 }
                 else {
-                    // UPDATED: Now calling the unified addBook method which returns boolean
+                    // UPDATED: Now calling the unified addBook method
                     boolean isAdded = lib.addBook(title, author);
 
                     if (isAdded) {
@@ -98,20 +98,25 @@ public class LibraryUI extends JFrame {
         add(bRemove);
     }
 
-    // --- NEW: Search Book UI Initialization ---
+    // --- NEW: Search Book UI Initialization (Split into Title and Author) ---
     private void initSearchBookUI() {
-        JLabel lTitle = new JLabel("Enter Title to Search:");
-        JTextField tTitle = new JTextField(20);
-        JButton bSearch = new JButton("Search Book");
+        JLabel lInfo = new JLabel("Select Search Method:");
 
-        bSearch.addActionListener(new ActionListener() {
+        // Button 1: Search by Title
+        JButton bSearchTitle = new JButton("Search by Title");
+        bSearchTitle.setPreferredSize(new Dimension(140, 40));
+
+        // Button 2: Search by Author
+        JButton bSearchAuthor = new JButton("Search by Author");
+        bSearchAuthor.setPreferredSize(new Dimension(140, 40));
+
+        // Action for Title Search
+        bSearchTitle.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String title = tTitle.getText();
-                if (title.isEmpty()) {
-                    JOptionPane.showMessageDialog(null, "Please enter a title!");
-                }
-                else {
+                String title = JOptionPane.showInputDialog(null, "Enter Book Title:");
+
+                if (title != null && !title.trim().isEmpty()) {
                     // Call the search method from LibraryManager
                     Book foundBook = lib.searchBook(title);
 
@@ -127,8 +132,29 @@ public class LibraryUI extends JFrame {
                 }
             }
         });
-        add(lTitle);
-        add(tTitle);
-        add(bSearch);
+
+        // Action for Author Search
+        bSearchAuthor.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String author = JOptionPane.showInputDialog(null, "Enter Author Name:");
+
+                if (author != null && !author.trim().isEmpty()) {
+                    // Call the new author search method
+                    String result = lib.searchByAuthor(author);
+
+                    if (result != null) {
+                        String message = "Books by " + author + ":\n\n" + result;
+                        JOptionPane.showMessageDialog(null, message, "Search Result", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "No books found for this author.", "Result", JOptionPane.WARNING_MESSAGE);
+                    }
+                }
+            }
+        });
+
+        add(lInfo);
+        add(bSearchTitle);
+        add(bSearchAuthor);
     }
 }
