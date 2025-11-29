@@ -8,14 +8,17 @@ public class LibraryManagementSystem {
     public static void main(String[] args) {
         LibraryManager lib = new LibraryManager(); // construct a library
         Scanner sc = new Scanner(System.in);
+
         boolean isRunning = true;
+
         // Loop to keep the menu active
         while (isRunning) {
             System.out.println("--- Main Menu ---");
             System.out.println("1 - Add Book (Open UI)");
             System.out.println("2 - Remove Book (Open UI)");
             System.out.println("3 - Search Book (Open UI)");
-            System.out.println("4 - Show Library (Open UI)");
+            System.out.println("4 - Show Library (Not completed)");
+            System.out.println("9 - Undo (Not Completed)");
             System.out.println("0 - Exit");
             System.out.print("Select an option: ");
 
@@ -46,12 +49,9 @@ public class LibraryManagementSystem {
                         new LibraryUI(lib, 3);
                     });
                 }
-                else if(option == 4) {
-                    System.out.println("Showing Library...");
-                    // Open UI in mode 4
-                    SwingUtilities.invokeLater(() -> {
-                        new LibraryUI(lib, 4);
-                    });
+                else if(option == 9) {
+                    System.out.println("Undo operation is starting...");
+                    
                 }
                 else if (option == 0) {
                     System.out.println("Exiting system...");

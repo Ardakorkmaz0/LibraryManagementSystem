@@ -28,16 +28,8 @@ public class LibraryUI extends JFrame {
             setSize(350, 150); // Adjusted size for two buttons
             initSearchBookUI();
         }
-        else if (option == 4) {
-            setTitle("Inventory");
-            setSize(550, 400);
-            initShowLibraryUI();
-
-        }
         setVisible(true);
-
     }
-
 
     private void initAddBookUI() {
 
@@ -162,38 +154,5 @@ public class LibraryUI extends JFrame {
         add(lInfo);
         add(bSearchTitle);
         add(bSearchAuthor);
-    }
-    // Simple Show Library Method (No ScrollPane Code) ---
-    private void initShowLibraryUI() {
-        JLabel lTitle = new JLabel("Current Library Inventory:");
-        lTitle.setFont(new Font("Arial", Font.BOLD, 14));
-        // Use JTextArea instead of JTextField to show multiple lines
-        JTextArea tList = new JTextArea(15, 70);
-        tList.setEditable(false); // Read-only
-        tList.setFont(new Font("Monospaced", Font.PLAIN, 12)); // Monospaced font aligns text better
-        // Add a ScrollPane in case there are many books
-        JScrollPane scrollPane = new JScrollPane(tList);
-        // Read from file and populate the text area
-        try (java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.FileReader("library_books.txt"))) {
-            String line;
-            StringBuilder content = new StringBuilder();
-            // Header
-            content.append(String.format("%-30s %s\n", "TITLE", "AUTHOR"));
-            content.append("------------------------------------------------------------------\n");
-
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",");
-                if (parts.length >= 2) {
-                    // Format: Title (padded to 30 chars) - Author
-                    content.append(String.format("%-30s %s\n", parts[0].trim(), parts[1].trim()));
-                }
-            }
-            tList.setText(content.toString());
-        }
-        catch (java.io.IOException e) {
-            tList.setText("Error reading library file: " + e.getMessage());
-        }
-        add(lTitle);
-        add(scrollPane);
     }
 }
