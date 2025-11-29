@@ -17,7 +17,7 @@ public class LibraryManagementSystem {
             System.out.println("1 - Add Book (Open UI)");
             System.out.println("2 - Remove Book (Open UI)");
             System.out.println("3 - Search Book (Open UI)");
-            System.out.println("4 - Show Library (Not completed)");
+            System.out.println("4 - Show Library (Open UI)");
             System.out.println("9 - Undo (Not Completed)");
             System.out.println("0 - Exit");
             System.out.print("Select an option: ");
@@ -47,6 +47,13 @@ public class LibraryManagementSystem {
                     // Open UI in mode 3
                     SwingUtilities.invokeLater(() -> {
                         new LibraryUI(lib, 3);
+                    });
+                }
+                else if(option == 4) {
+                    System.out.println("Launching Show Library Window...");
+                    lib.showLibrary();
+                    SwingUtilities.invokeLater(() -> {
+                        new LibraryUI(lib, 4);
                     });
                 }
                 else if(option == 9) {

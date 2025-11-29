@@ -12,7 +12,35 @@ public class LibraryManager {
     private UndoManager undoManager = new UndoManager();
 
     Scanner input = new Scanner(System.in);
+    public LibraryManager() {
+        loadBooksFromFile();
+    }
 
+    //Helper method to read the text file and populate the BSTs
+    private void loadBooksFromFile() {
+        File file = new File(FILE_NAME);
+        if (!file.exists()) {
+            return; // No file exists yet, nothing to load.
+        }
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length >= 2) {
+                    String title = parts[0].trim();
+                    String author = parts[1].trim();
+                    // Re-create the book object
+                    Book book = new Book(title, author);
+                    // Add to Memory (BSTs) only (Don't save to file again!)
+                    titleTree.addByTitle(book);
+                    authorTree.addByAuthor(book);
+                }
+            }
+            System.out.println("System: Data loaded successfully from file.");
+        } catch (IOException e) {
+            System.out.println("Error loading data: " + e.getMessage());
+        }
+    }
     // --- METHOD 1: CONSOLE INTERFACE ---
     // This method handles the console input and then calls the main logic below
     void addBook(){
@@ -136,8 +164,8 @@ public class LibraryManager {
     }
     
     // Inorder showing (sorted alphabetic) the books
-    void showLibrary(){
-         titleTree.showAlphabetic();
+    public String showLibrary(){
+         return titleTree.showAlphabetic();
     }
     
 }

@@ -9,6 +9,8 @@ public class LibraryUI extends JFrame {
 
     LibraryManager lib;
 
+
+
     public LibraryUI(LibraryManager lib, int option) {
         this.lib = lib;
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -28,8 +30,16 @@ public class LibraryUI extends JFrame {
             setSize(350, 150); // Adjusted size for two buttons
             initSearchBookUI();
         }
+        else if(option == 4){
+            setTitle("Inventory");
+            setSize(350, 350);
+            initShowLibraryUI();
+        }
         setVisible(true);
     }
+
+
+
 
     private void initAddBookUI() {
 
@@ -67,6 +77,9 @@ public class LibraryUI extends JFrame {
         add(bAdd);
     }
 
+
+
+
     private void initRemoveBookUI() {
         JLabel lTitle = new JLabel("Enter Title to Delete:");
         JTextField tTitle = new JTextField(20);
@@ -95,6 +108,9 @@ public class LibraryUI extends JFrame {
         add(lTitle); add(tTitle);
         add(bRemove);
     }
+
+
+
 
     // Search Book UI Initialization (Split into Title and Author)
     private void initSearchBookUI() {
@@ -150,9 +166,25 @@ public class LibraryUI extends JFrame {
                 }
             }
         });
-
         add(lInfo);
         add(bSearchTitle);
         add(bSearchAuthor);
     }
+
+
+
+    private void initShowLibraryUI() {
+        JLabel lTitle = new JLabel("Inventory:");
+        // JTextArea is better for multi-line text display
+        JTextArea tArea = new JTextArea(15, 30);
+        tArea.setText(lib.showLibrary()); // Call the method and fill the area
+        tArea.setEditable(false); // Make it read-only
+        // Add scroll bar in case of many books
+        JScrollPane scrollPane = new JScrollPane(tArea);
+        add(lTitle);
+        add(scrollPane); // Add the scroll pane containing the text area
+    }
+
+
+
 }
