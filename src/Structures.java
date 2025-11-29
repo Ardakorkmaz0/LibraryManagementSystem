@@ -407,4 +407,8 @@ class stack {
         }
         curr.next = null;
     }
+    UndoAction pop() {
+        UndoAction action = (UndoAction) top.data;
+        return action;
+    }
 }
