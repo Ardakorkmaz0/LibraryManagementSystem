@@ -336,32 +336,37 @@ class titleBst extends bst {
         // Key is larger than root's key
         return searchRec(root.right, title);
     }
-
-    // Returns a formatted string of all books sorted alphabetically
-    public String showAlphabetic(){
+    
+    public void showAlphabetic(){
         if(root == null){
-            return "The library is empty.";
+            System.out.println("The library is empty.");
+            return;
         }
-        StringBuilder sb = new StringBuilder();
-        inOrder(root, sb);
-        return sb.toString(); // Return the constructed string to UI
+        Book book = (Book) root.data;
+        inOrder(root, book);
     }
-
-    private void inOrder(bstNode node, StringBuilder sb){
-        if (node == null) return;
-
-        // Traverse left subtree first
-        inOrder(node.left, sb);
-
-        // Process current node
-        Book book = (Book) node.data;
-        sb.append(book.getTitle()).append(" - ").append(book.getAuthor()).append("\n"); // Append book details
-
-        // Traverse right subtree
-        inOrder(node.right, sb);
+    
+    private void inOrder(bstNode node, Book book){
+        int count = 0;
+        if(node.left != null) {
+            book = (Book) node.left.data;
+            inOrder(node.left, book);
+        }
+        if(count == 5){
+            System.out.println();
+        }
+        System.out.print(book.getTitle() + "  |  ");
+        count++;
+        if(node.right != null) {
+            book = (Book) node.right.data;
+            inOrder(node.right, book);
+        }
     }
     
 }
+
+
+
 
 class queue { // queue operations
 
@@ -407,4 +412,10 @@ class stack {
         }
         curr.next = null;
     }
+    
+    UndoAction pop() {
+        UndoAction action = (UndoAction) top.data;
+        return action;
+    }
+    
 }
