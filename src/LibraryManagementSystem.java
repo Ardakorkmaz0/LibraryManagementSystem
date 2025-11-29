@@ -14,10 +14,10 @@ public class LibraryManagementSystem {
         // Loop to keep the menu active
         while (isRunning) {
             System.out.println("--- Main Menu ---");
-            System.out.println("1 - Add Book (Open UI)");
-            System.out.println("2 - Remove Book (Open UI)");
-            System.out.println("3 - Search Book (Open UI)");
-            System.out.println("4 - Show Library (Open UI)");
+            System.out.println("1 - Add Book (Open GUI)");
+            System.out.println("2 - Remove Book (Open GUI)");
+            System.out.println("3 - Search Book (Open GUI)");
+            System.out.println("4 - Show Library (Open GUI)");
             System.out.println("9 - Undo (Not Completed)");
             System.out.println("0 - Exit");
             System.out.print("Select an option: ");
@@ -30,7 +30,7 @@ public class LibraryManagementSystem {
                     System.out.println("Launching Add Book Window...");
                     // Open UI in mode 1
                     SwingUtilities.invokeLater(() -> {
-                        new LibraryUI(lib, 1);
+                        new LibraryGUI(lib, 1);
                     });
 
                 }
@@ -38,7 +38,7 @@ public class LibraryManagementSystem {
                     System.out.println("Launching Remove Book Window...");
                     // Open UI in mode 2
                     SwingUtilities.invokeLater(() -> {
-                        new LibraryUI(lib, 2);
+                        new LibraryGUI(lib, 2);
                     });
 
                 }
@@ -46,14 +46,14 @@ public class LibraryManagementSystem {
                     System.out.println("Launching Search Book Window...");
                     // Open UI in mode 3
                     SwingUtilities.invokeLater(() -> {
-                        new LibraryUI(lib, 3);
+                        new LibraryGUI(lib, 3);
                     });
                 }
                 else if(option == 4) {
                     System.out.println("Launching Show Library Window...");
                     lib.showLibrary();
                     SwingUtilities.invokeLater(() -> {
-                        new LibraryUI(lib, 4);
+                        new LibraryGUI(lib, 4);
                     });
                 }
                 else if(option == 9) {
@@ -72,6 +72,7 @@ public class LibraryManagementSystem {
                 System.out.println("Please enter a valid number!");
                 sc.next(); // Consume invalid input to prevent infinite loop
             }
+            System.out.println("------------------------------------------------");
         }
         sc.close();
 
