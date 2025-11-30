@@ -14,4 +14,22 @@ public class UndoManager {
             lastActions.push(action);
         }
     }
+    
+    public void undo(){
+        UndoAction action = lastActions.pop();
+        if(action != null){
+            action.undo();
+        }
+    }
+
+    
+    public String getLastActionName(){
+        UndoAction action = lastActions.peek();
+        if(action == null){
+            return "";
+        }
+        return action.getName();
+    }
+
+    
 }

@@ -408,7 +408,24 @@ class stack {
         curr.next = null;
     }
     UndoAction pop() {
+        if (top == null){
+            System.out.println("There is no last action");
+            return null;
+        }
+        UndoAction action = (UndoAction) top.data;
+        top = top.next;
+        return action;
+    }
+
+    
+    UndoAction peek() {
+        if(top == null){
+            System.out.println("There is no last action.");
+            return null;
+        }
         UndoAction action = (UndoAction) top.data;
         return action;
     }
+
+    
 }

@@ -8,6 +8,7 @@ public class LibraryManagementSystem {
     public static void main(String[] args) {
         LibraryManager lib = new LibraryManager(); // construct a library
         Scanner sc = new Scanner(System.in);
+        UndoManager undoManager = lib.undoManager;
 
         boolean isRunning = true;
 
@@ -57,7 +58,26 @@ public class LibraryManagementSystem {
                     });
                 }
                 else if(option == 9) {
-                    System.out.println("Undo operation is starting...");
+                    if(undoManager.lastActions.top == null){
+                        System.out.println("There is no last action.");
+                        continue;
+                    }
+                    System.out.println("The last operation is : " + undoManager.getLastActionName());
+                    System.out.println("Are you sure that you want to undo ? (Y = Yes or N = No)");
+                    while(true){
+                        String selectionOfUndo = sc.nextLine();
+                        if(selectionOfUndo.trim().equalsIgnoreCase("Y")){
+                            System.out.println("Undo operation is starting...");
+                            undoManager.undo();
+                            System.out.println("Undo operation is completed.");
+                            break;
+                        }
+                        if(selectionOfUndo.trim().equalsIgnoreCase("N")){
+                            System.out.println("Undo operation is cancelled.");
+                            break;
+                        }
+                    }
+
                     
                 }
                 else if (option == 0) {

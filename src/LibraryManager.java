@@ -9,7 +9,7 @@ public class LibraryManager {
     private titleBst titleTree = new titleBst();
     private authorBst authorTree = new authorBst();
     private static final String FILE_NAME = "library_books.txt"; // File to save books
-    private UndoManager undoManager = new UndoManager();
+    public UndoManager undoManager = new UndoManager();
 
     Scanner input = new Scanner(System.in);
     public LibraryManager() {
@@ -122,6 +122,8 @@ public class LibraryManager {
 
                 if (currentTitle.equals(titleToRemove)) {
                     isFound = true;
+                    // Add this action into the undo stack
+                    undoManager.addAction(new undoRemoveBook(this, titleTree.search(currentTitle)));
                     // Also remove from Memory/BSTs immediately
                     titleTree.delete(currentTitle);
                     if (parts.length > 1) authorTree.delete(parts[1], currentTitle);
