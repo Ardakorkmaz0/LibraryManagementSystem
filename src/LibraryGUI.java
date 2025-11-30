@@ -174,6 +174,7 @@ public class LibraryGUI extends JFrame {
                             // Show the results in a dialog
                             JOptionPane.showMessageDialog(null, scrollPane, "Search Results", JOptionPane.INFORMATION_MESSAGE);
 
+
                         } else {
                             // Show warning if no books found
                             JOptionPane.showMessageDialog(null, "No books found for this author.", "Result", JOptionPane.WARNING_MESSAGE);
