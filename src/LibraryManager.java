@@ -150,7 +150,7 @@ public class LibraryManager {
                 String[] parts = line.split(",");
                 String currentTitle = parts[0].trim();
 
-                if (currentTitle.equals(titleToRemove)) {
+                if (currentTitle.toLowerCase().equals(titleToRemove.toLowerCase())) {
                     isFound = true;
                     // Add this action into the undo stack
                     undoManager.addAction(new undoRemoveBook(this, titleTree.search(currentTitle)));
@@ -191,8 +191,8 @@ public class LibraryManager {
     }
     
     void removeBook(Book book){
-        titleTree.delete(book.getTitle());
-        authorTree.delete(book.getAuthor(), book.getTitle());
+        titleTree.delete(book.getTitle().toLowerCase());
+        authorTree.delete(book.getAuthor(), book.getTitle().toLowerCase());
     }
     
     // Inorder showing (sorted alphabetic) the books
