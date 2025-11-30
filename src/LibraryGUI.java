@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 public class LibraryGUI extends JFrame {
 
     LibraryManager lib;
+    UndoManager undo;
 
 
 
@@ -34,6 +35,11 @@ public class LibraryGUI extends JFrame {
             setTitle("Inventory");
             setSize(350, 350);
             initShowLibraryGUI();
+        }
+        else if(option == 9){
+            setTitle("Undo Operation");
+            setSize(200, 150);
+            initUndoGUI();
         }
         setVisible(true);
     }
@@ -200,7 +206,64 @@ public class LibraryGUI extends JFrame {
         add(lTitle);
         add(scrollPane); // Add the scroll pane containing the text area
     }
+    public void initUndoGUI() {
+        // 1. Get the reference to the UndoManager from the LibraryManager
+        UndoManager manager = lib.undoManager;
 
+        // 2. Create a Label to show the last action name
+        JLabel lStatus = new JLabel();
 
+        // Check the current status immediately when window opens
+        String lastAction = manager.getLastActionName();
+        if (lastAction.isEmpty()) {
+            lStatus.setText("No actions to undo.");
+        } else {
+            lStatus.setText("Last Action: " + lastAction);
+        }
 
+        // Create the Undo Button
+        JButton bUndo = new JButton("Confirm Undo");
+
+        // Creat the Close Button
+        JButton bClose = new JButton("close");
+
+        // Add Action Listener to handle the click
+        bUndo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Check if there is actually something to undo
+                if (manager.getLastActionName().isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "There is no action left to undo!", "Warning", JOptionPane.WARNING_MESSAGE);
+                    lStatus.setText("No actions to undo.");
+                    return;
+                }
+
+                // Perform the undo logic
+                manager.undo();
+
+                // Show success message
+                JOptionPane.showMessageDialog(null, "Undo operation completed successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
+
+                // Refresh the label to show the *next* available undo action (if any)
+                String nextAction = manager.getLastActionName();
+                if (nextAction.isEmpty()) {
+                    lStatus.setText("No actions to undo.");
+                } else {
+                    lStatus.setText("Next Undo: " + nextAction);
+                }
+            }
+        });
+        bClose.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Closes the current window (Undo Window) but keeps the main app running
+                dispose();
+            }
+        });
+        // Add components to the layout
+        // Using a vertical box layout or flow layout from constructor
+        add(lStatus);
+        add(bUndo);
+        add(bClose);
+    }
 }

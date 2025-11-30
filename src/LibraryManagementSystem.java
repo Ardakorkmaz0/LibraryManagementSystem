@@ -19,7 +19,7 @@ public class LibraryManagementSystem {
             System.out.println("2 - Remove Book (Open GUI)");
             System.out.println("3 - Search Book (Open GUI)");
             System.out.println("4 - Show Library (Open GUI)");
-            System.out.println("9 - Undo");
+            System.out.println("9 - Undo Operation (Open GUI)");
             System.out.println("0 - Exit");
             System.out.print("Select an option: ");
 
@@ -58,27 +58,10 @@ public class LibraryManagementSystem {
                     });
                 }
                 else if(option == 9) {
-                    if(undoManager.lastActions.top == null){
-                        System.out.println("There is no last action.");
-                        continue;
-                    }
-                    System.out.println("The last operation is : " + undoManager.getLastActionName());
-                    System.out.println("Are you sure that you want to undo ? (Y = Yes or N = No)");
-                    while(true){
-                        String selectionOfUndo = sc.nextLine();
-                        if(selectionOfUndo.trim().equalsIgnoreCase("Y")){
-                            System.out.println("Undo operation is starting...");
-                            undoManager.undo();
-                            System.out.println("Undo operation is completed.");
-                            break;
-                        }
-                        if(selectionOfUndo.trim().equalsIgnoreCase("N")){
-                            System.out.println("Undo operation is cancelled.");
-                            break;
-                        }
-                    }
-
-                    
+                    System.out.println("Launching Undo Window...");
+                    SwingUtilities.invokeLater(() -> {
+                        new LibraryGUI(lib, 9);
+                    });
                 }
                 else if (option == 0) {
                     System.out.println("Exiting system...");

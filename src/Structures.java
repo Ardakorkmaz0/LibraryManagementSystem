@@ -409,7 +409,6 @@ class stack {
     }
     UndoAction pop() {
         if (top == null){
-            System.out.println("There is no last action");
             return null;
         }
         UndoAction action = (UndoAction) top.data;
