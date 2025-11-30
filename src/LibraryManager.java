@@ -105,6 +105,36 @@ public class LibraryManager {
         
         
     }
+    
+    public boolean addBookForUndo(String title, String author){
+        String cleanTitle = title.trim().toLowerCase();
+        String cleanAuthor = author.trim().toLowerCase();
+
+        // 1. Check if book already exists
+        // NOTE: Make sure you added the 'search' method to titleBst as discussed before.
+        if (titleTree.search(cleanTitle) != null) {
+            System.out.println("Error: Book '" + cleanTitle + "' already exists.");
+            return false; // Duplicate found, do not add
+        }
+
+        // 2. Create Object
+        Book book = new Book(cleanTitle, cleanAuthor);
+
+        // 3. Add to Memory (BSTs)
+        titleTree.addByTitle(book);
+        authorTree.addByAuthor(book);
+
+        // 4. Save to File (Appends to the end of txt)
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME, true))) {
+            writer.write(cleanTitle + "," + cleanAuthor);
+            writer.newLine();
+        } catch (IOException e) {
+            System.out.println("Error saving to file: " + e.getMessage());
+            return false;
+        }
+
+        return true;
+    }
 
     //  --- METHOD 3 : RemoveBook from tree
     // --- REMOVE METHOD (Reads all lines, skips the one to delete, rewrites file) ---

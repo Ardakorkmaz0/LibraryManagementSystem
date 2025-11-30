@@ -46,7 +46,7 @@ class undoRemoveBook implements UndoAction{
             System.out.println("The undo operation is not successfuly.");
             return;
         }
-        lib.addBook(book.getTitle(), book.getAuthor());
+        lib.addBookForUndo(book.getTitle(), book.getAuthor());
     }
     
     @Override

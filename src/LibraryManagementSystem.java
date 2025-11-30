@@ -19,7 +19,7 @@ public class LibraryManagementSystem {
             System.out.println("2 - Remove Book (Open GUI)");
             System.out.println("3 - Search Book (Open GUI)");
             System.out.println("4 - Show Library (Open GUI)");
-            System.out.println("9 - Undo (Not Completed)");
+            System.out.println("9 - Undo");
             System.out.println("0 - Exit");
             System.out.print("Select an option: ");
 
