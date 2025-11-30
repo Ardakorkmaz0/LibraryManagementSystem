@@ -150,22 +150,37 @@ public class LibraryGUI extends JFrame {
         // Action for Author Search
         bSearchAuthor.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
+                public void actionPerformed(ActionEvent e) {             // Open input dialog to get author name
                 String author = JOptionPane.showInputDialog(null, "Enter Author Name:");
 
-                if (author != null && !author.trim().isEmpty()) {
-                    // Call the new author search method
-                    String result = lib.searchByAuthor(author);
+                    if (author != null && !author.trim().isEmpty()) { // Validate input (check if not null or empty)
 
-                    if (result != null) {
-                        String message = "Books by " + author + ":\n\n" + result;
-                        JOptionPane.showMessageDialog(null, message, "Search Result", JOptionPane.INFORMATION_MESSAGE);
-                    } else {
-                        JOptionPane.showMessageDialog(null, "No books found for this author.", "Result", JOptionPane.WARNING_MESSAGE);
+                        String result = lib.searchByAuthor(author); // Call the search method from LibraryManager
+
+                        if (result != null) {
+
+                            String message = "Books by " + author + ":\n\n" + result; // Prepare the message with the list of books found
+
+                            // Create a JTextArea to display results (supports multiple lines)
+                            JTextArea textArea = new JTextArea(message);
+                            textArea.setEditable(false);
+                            textArea.setLineWrap(true);
+                            textArea.setWrapStyleWord(true);
+
+                            // Add a ScrollPane in case the list is long
+                            JScrollPane scrollPane = new JScrollPane(textArea);
+                            scrollPane.setPreferredSize(new Dimension(300, 200));
+
+                            // Show the results in a dialog
+                            JOptionPane.showMessageDialog(null, scrollPane, "Search Results", JOptionPane.INFORMATION_MESSAGE);
+
+                        } else {
+                            // Show warning if no books found
+                            JOptionPane.showMessageDialog(null, "No books found for this author.", "Result", JOptionPane.WARNING_MESSAGE);
+                        }
                     }
                 }
-            }
-        });
+            });
         add(lInfo);
         add(bSearchTitle);
         add(bSearchAuthor);

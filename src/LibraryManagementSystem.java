@@ -75,7 +75,5 @@ public class LibraryManagementSystem {
             System.out.println("------------------------------------------------");
         }
         sc.close();
-
     }
-
 }
