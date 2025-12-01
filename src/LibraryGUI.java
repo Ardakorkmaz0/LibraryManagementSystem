@@ -36,6 +36,16 @@ public class LibraryGUI extends JFrame {
             setSize(350, 350);
             initShowLibraryGUI();
         }
+        else if (option == 5) { // Option for registering new member
+            setTitle("Register New Member");
+            setSize(300, 300);
+            initRegisterGUI();
+        }
+        else if (option == 6) { // Option for user login
+            setTitle("User Login");
+            setSize(300, 150);
+            initLoginGUI();
+        }
         else if(option == 9){
             setTitle("Undo Operation");
             setSize(200, 150);
@@ -265,5 +275,91 @@ public class LibraryGUI extends JFrame {
         add(lStatus);
         add(bUndo);
         add(bClose);
+    }
+    private void initRegisterGUI() {
+        JLabel lName = new JLabel("Name:");
+        JTextField tName = new JTextField(20);
+
+        JLabel lSurname = new JLabel("Surname:");
+        JTextField tSurname = new JTextField(20);
+
+        JLabel lAge = new JLabel("Age:");
+        JTextField tAge = new JTextField(20);
+
+        JButton bRegister = new JButton("Register");
+
+        bRegister.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String name = tName.getText().trim();
+                String surname = tSurname.getText().trim();
+                String ageText = tAge.getText().trim();
+
+                // check if any field is empty
+                if(name.isEmpty() || surname.isEmpty() || ageText.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Please fill all fields!");
+                    return;
+                }
+
+                try {
+                    int age = Integer.parseInt(ageText);
+                    // call the register method and get the created user
+                    User newUser = lib.userManager.registerUser(name, surname, age);
+
+                    // prepare the success message with the unique ID
+                    String message = "Registration Successful!\n\n" +
+                            "Welcome, " + newUser.getName() + "\n" +
+                            "YOUR ID: " + newUser.getId() + "\n\n" +
+                            "Please save this ID to login.";
+
+                    // using JTextArea to allow copying the ID
+                    JTextArea textArea = new JTextArea(message);
+                    textArea.setEditable(false);
+                    JOptionPane.showMessageDialog(null, textArea);
+
+                    dispose(); // close the window after registration
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(null, "Age must be a valid number!", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+
+        add(lName); add(tName);
+        add(lSurname); add(tSurname);
+        add(lAge); add(tAge);
+        add(bRegister);
+    }
+
+    // --- METHOD: Login GUI Initialization ---
+    private void initLoginGUI() {
+        JLabel lId = new JLabel("Enter User ID:");
+        JTextField tId = new JTextField(20);
+        JButton bLogin = new JButton("Login");
+
+        bLogin.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String id = tId.getText().trim();
+
+                if(id.isEmpty()){
+                    JOptionPane.showMessageDialog(null, "Please enter an ID.");
+                    return;
+                }
+
+                // try to login with the given ID
+                boolean success = lib.userManager.login(id);
+
+                if(success) {
+                    User activeUser = lib.userManager.getActiveUser();
+                    JOptionPane.showMessageDialog(null, "Login Successful!\nWelcome back, " + activeUser.getName());
+                    dispose(); // close the window after successful login
+                } else {
+                    JOptionPane.showMessageDialog(null, "Login Failed: ID not found.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+
+        add(lId); add(tId);
+        add(bLogin);
     }
 }

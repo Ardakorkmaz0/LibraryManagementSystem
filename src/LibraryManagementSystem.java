@@ -9,6 +9,7 @@ public class LibraryManagementSystem {
         LibraryManager lib = new LibraryManager(); // construct a library
         Scanner sc = new Scanner(System.in);
         UndoManager undoManager = lib.undoManager;
+        UserManager userManager = lib.userManager;
 
         boolean isRunning = true;
 
@@ -19,6 +20,9 @@ public class LibraryManagementSystem {
             System.out.println("2 - Remove Book (Open GUI)");
             System.out.println("3 - Search Book (Open GUI)");
             System.out.println("4 - Show Library (Open GUI)");
+            System.out.println("5 - Register New User (Open GUI)");
+            System.out.println("6 - Login (Open GUI)");
+            System.out.println("7 - Logout (Now Console)");
             System.out.println("9 - Undo Operation (Open GUI)");
             System.out.println("0 - Exit");
             System.out.print("Select an option: ");
@@ -52,13 +56,34 @@ public class LibraryManagementSystem {
                 }
                 else if(option == 4) {
                     System.out.println("Launching Show Library Window...");
+                    // Open UI in mode 4
                     lib.showLibrary();
                     SwingUtilities.invokeLater(() -> {
                         new LibraryGUI(lib, 4);
                     });
                 }
+                else if (option == 5) {
+                    System.out.println("Launching Register New User Window...");
+                    // Open UI in mode 5
+                    SwingUtilities.invokeLater(() -> {
+                        new LibraryGUI(lib, 5);
+                    });
+                }
+                else if (option == 6) {
+                    System.out.println("Launching Login Window...");
+                    // Open UI in mode 6
+                    SwingUtilities.invokeLater(() -> {
+                        new LibraryGUI(lib, 6);
+                    });
+                }
+                else if (option == 7) {
+                    System.out.println("Loging out...");
+                    userManager.logout();
+
+                }
                 else if(option == 9) {
                     System.out.println("Launching Undo Window...");
+                    // Open UI in mode 9
                     SwingUtilities.invokeLater(() -> {
                         new LibraryGUI(lib, 9);
                     });
