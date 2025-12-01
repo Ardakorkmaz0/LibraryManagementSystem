@@ -21,7 +21,7 @@ public class UserManager {
         loadUsersFromFile(); // Load data when system starts
     }
 
-    // -Register User Method 
+    // -Register User Method
     public User registerUser(String name, String surname, int age) {
         User newUser = new User(name, surname, age);
 
@@ -114,5 +114,46 @@ public class UserManager {
         Scanner sc = new Scanner(System.in);
         System.out.print("User ID: "); String id = sc.nextLine();
         login(id);
+    }
+    // Method: Delete User (Returns true if succesful)
+    public boolean deleteUser(String id) {
+        // Check if user exist in Hash Table(memory)
+        if(userTable.get(id) == null) {
+            return false;
+        }
+        // Remove from Hash Table
+        userTable.remove(id);
+
+        return removeUserFromFile(id);
+    }
+    // Remove User from File
+    private boolean removeUserFromFile(String idToRemove) {
+        File inputFile = new File(USER_FILE);
+        File tempFile = new File("user_temp.txt");
+        boolean isFound = false;
+
+        try(BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+        BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))){
+            String line;
+            while((line = reader.readLine()) != null){
+                String[] parts = line.split(",");
+                if(parts.length == 4) {
+                    String currentId = parts[3].trim();
+                    if(currentId.equals(idToRemove)) {
+                        isFound = true;
+                        continue;
+                    }
+                }
+                writer.write(line);
+                writer.newLine();
+            }
+        }
+        catch (IOException e) {
+            return false;
+        }
+        if(inputFile.delete()) {
+            tempFile.renameTo(inputFile);
+        }
+        return isFound;
     }
 }

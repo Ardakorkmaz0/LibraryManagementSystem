@@ -23,6 +23,7 @@ public class LibraryManagementSystem {
             System.out.println("5 - Register New User (Open GUI)");
             System.out.println("6 - Login (Open GUI)");
             System.out.println("7 - Logout (Now Console)");
+            System.out.println("8 - Remove User (Open GUI)");
             System.out.println("9 - Undo Operation (Open GUI)");
             System.out.println("0 - Exit");
             System.out.print("Select an option: ");
@@ -80,6 +81,13 @@ public class LibraryManagementSystem {
                     System.out.println("Loging out...");
                     userManager.logout();
 
+                }
+                else if(option == 8) {
+                    System.out.println("Launching Delete User Window...");
+                    // Open UI in mode 8
+                    SwingUtilities.invokeLater(() -> {
+                        new LibraryGUI(lib, 8);
+                    });
                 }
                 else if(option == 9) {
                     System.out.println("Launching Undo Window...");

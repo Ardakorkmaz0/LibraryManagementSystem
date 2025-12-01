@@ -46,6 +46,11 @@ public class LibraryGUI extends JFrame {
             setSize(300, 150);
             initLoginGUI();
         }
+        else if (option == 8) { // Option for deleting user
+            setTitle("Delete User");
+            setSize(300, 150);
+            initDeleteUserGUI();
+        }
         else if(option == 9){
             setTitle("Undo Operation");
             setSize(200, 150);
@@ -54,6 +59,7 @@ public class LibraryGUI extends JFrame {
         setVisible(true);
     }
 
+//-------------------------------------------------------------------------------------------------------------------------------------------
 
 
 
@@ -93,6 +99,7 @@ public class LibraryGUI extends JFrame {
         add(bAdd);
     }
 
+//-------------------------------------------------------------------------------------------------------------------------------------------
 
 
 
@@ -125,7 +132,7 @@ public class LibraryGUI extends JFrame {
         add(bRemove);
     }
 
-
+//-------------------------------------------------------------------------------------------------------------------------------------------
 
 
     // Search Book UI Initialization (Split into Title and Author)
@@ -216,6 +223,12 @@ public class LibraryGUI extends JFrame {
         add(lTitle);
         add(scrollPane); // Add the scroll pane containing the text area
     }
+
+//-------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
     public void initUndoGUI() {
         // 1. Get the reference to the UndoManager from the LibraryManager
         UndoManager manager = lib.undoManager;
@@ -276,6 +289,11 @@ public class LibraryGUI extends JFrame {
         add(bUndo);
         add(bClose);
     }
+
+//-------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
     private void initRegisterGUI() {
         JLabel lName = new JLabel("Name:");
         JTextField tName = new JTextField(20);
@@ -330,6 +348,11 @@ public class LibraryGUI extends JFrame {
         add(bRegister);
     }
 
+//-------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
     // --- METHOD: Login GUI Initialization ---
     private void initLoginGUI() {
         JLabel lId = new JLabel("Enter User ID:");
@@ -362,4 +385,50 @@ public class LibraryGUI extends JFrame {
         add(lId); add(tId);
         add(bLogin);
     }
+//-------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+    // METHOD: Delete User GUI Initialization
+    private void initDeleteUserGUI() {
+        JLabel lId = new JLabel("Enter User ID to Delete:");
+        JTextField tId = new JTextField(20);
+        JButton bDelete = new JButton("Delete User");
+
+        bDelete.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String id = tId.getText().trim();
+                if (id.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Please enter an ID!", "Warning", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+                // Confirmation dialog to prevent accidental deletion
+                int confirm = JOptionPane.showConfirmDialog(null,
+                        "Are you sure you want to delete user " + id + "?",
+                        "Confirm Deletion",
+                        JOptionPane.YES_NO_OPTION);
+                if (confirm == JOptionPane.YES_OPTION) {
+                    // Call the logic from UserManager
+                    boolean success = lib.userManager.deleteUser(id);
+
+                    if (success) {
+                        JOptionPane.showMessageDialog(null, "User Deleted Successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                        tId.setText(""); // Clear the field
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Error: User ID not found.", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }
+        });
+
+        add(lId); add(tId);
+        add(bDelete);
+    }
+    //-------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
 }
