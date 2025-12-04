@@ -26,6 +26,7 @@ public class LibraryManagementSystem {
             System.out.println("8 - Remove User (Open GUI)");
             System.out.println("9 - Undo Operation (Open GUI)");
             System.out.println("0 - Exit");
+            System.out.println("11 - Loan Book (Not completed)");
             System.out.print("Select an option: ");
 
             // Validate if the input is an integer
@@ -88,6 +89,9 @@ public class LibraryManagementSystem {
                     SwingUtilities.invokeLater(() -> {
                         new LibraryGUI(lib, 8);
                     });
+                }
+                else if(option == 11) {
+                    // loan book codes
                 }
                 else if(option == 9) {
                     System.out.println("Launching Undo Window...");

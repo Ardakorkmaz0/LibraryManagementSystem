@@ -372,6 +372,20 @@ class queue { // queue operations
         front = null;
         rear = null;
     }
+    
+    int size(){
+        if(front == null && rear == null){
+            return 0;
+        }
+        sllNode temp = front;
+        int size = 1;
+        while(!temp.equals(rear)){
+            size++;
+            temp = temp.next;
+            }
+        return size;
+    }
+    
 }
 class stack {
     sllNode top;
