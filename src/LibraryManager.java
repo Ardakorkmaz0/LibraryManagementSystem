@@ -203,4 +203,8 @@ public class LibraryManager {
          return titleTree.showAlphabetic();
     }
     
+    void loanBook(User user, Book book){
+        
+    }
+    
 }
