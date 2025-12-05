@@ -25,8 +25,10 @@ public class LibraryManagementSystem {
             System.out.println("7 - Logout (Now Console)");
             System.out.println("8 - Remove User (Open GUI)");
             System.out.println("9 - Undo Operation (Open GUI)");
-            System.out.println("0 - Exit");
             System.out.println("11 - Loan Book (Not completed)");
+            System.out.println("12 - Borrow Book (Open GUI)");
+            System.out.println("13 - Return Book (Open GUI)");
+            System.out.println("0 - Exit");
             System.out.print("Select an option: ");
 
             // Validate if the input is an integer
@@ -92,6 +94,24 @@ public class LibraryManagementSystem {
                 }
                 else if(option == 11) {
                     // loan book codes
+                }
+                else if(option == 12) {
+                    if(lib.userManager.getActiveUser() == null){
+                        System.out.println("ERROR: You must LOGIN first (Option 6).");
+                    } else {
+                        SwingUtilities.invokeLater(() -> {
+                            new LibraryGUI(lib, 12);
+                        });
+                    }
+                }
+                else if(option == 13) {
+                    if (lib.userManager.getActiveUser() == null) {
+                        System.out.println("ERROR: You must LOGIN first (Option 6).");
+                    } else {
+                        SwingUtilities.invokeLater(() -> {
+                            new LibraryGUI(lib, 13);
+                        });
+                    }
                 }
                 else if(option == 9) {
                     System.out.println("Launching Undo Window...");

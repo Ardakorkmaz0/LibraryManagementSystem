@@ -56,6 +56,16 @@ public class LibraryGUI extends JFrame {
             setSize(200, 150);
             initUndoGUI();
         }
+        else if (option == 12) { // Borrow Book
+            setTitle("Borrow Book");
+            setSize(300, 200);
+            initBorrowGUI();
+        }
+        else if (option == 13) { // Return Book
+            setTitle("Return Book");
+            setSize(300, 200);
+            initReturnGUI();
+        }
         setVisible(true);
     }
 
@@ -154,17 +164,20 @@ public class LibraryGUI extends JFrame {
                 String title = JOptionPane.showInputDialog(null, "Enter Book Title:");
 
                 if (title != null && !title.trim().isEmpty()) {
-                    // Call the search method from LibraryManager
                     Book foundBook = lib.searchBook(title);
 
                     if (foundBook != null) {
-                        // Display book details if found
+                        // Show Status Details
+                        String status = foundBook.isAvailable() ? "[AVAILABLE]" : "[BORROWED BY ID: " + foundBook.getCurrentHolderId() + "]";
+
                         String message = "Book Found!\n" +
                                 "Title: " + foundBook.getTitle() + "\n" +
-                                "Author: " + foundBook.getAuthor();
+                                "Author: " + foundBook.getAuthor() + "\n" +
+                                "Status: " + status;
+
                         JOptionPane.showMessageDialog(null, message, "Search Result", JOptionPane.INFORMATION_MESSAGE);
                     } else {
-                        JOptionPane.showMessageDialog(null, "Error: Book not found in the library.", "Search Result", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "Error: Book not found.", "Search Result", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             }
@@ -422,10 +435,75 @@ public class LibraryGUI extends JFrame {
             }
         });
 
-        add(lId); add(tId);
+        add(lId);
+        add(tId);
         add(bDelete);
     }
     //-------------------------------------------------------------------------------------------------------------------------------------------
+
+    private void initBorrowGUI() {
+        JLabel lInfo = new JLabel("Enter Book Title to Borrow:");
+        JTextField tTitle = new JTextField(20);
+        JButton bBorrow = new JButton("Borrow");
+
+        bBorrow.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String title = tTitle.getText();
+
+                // Ensure a user is logged in
+                User activeUser = lib.userManager.getActiveUser();
+                if(activeUser == null) {
+                    JOptionPane.showMessageDialog(null, "You must Login first!", "Error", JOptionPane.ERROR_MESSAGE);
+                    dispose();
+                    return;
+                }
+
+                if (!title.isEmpty()) {
+                    // Call the Manager
+                    String result = lib.borrowBook(title, activeUser.getId());
+                    JOptionPane.showMessageDialog(null, result);
+                    if(result.startsWith("Success") || result.startsWith("Book is currently")) {
+                        dispose();
+                    }
+                }
+            }
+        });
+
+        add(lInfo);
+        add(tTitle);
+        add(bBorrow);
+    }
+    //-------------------------------------------------------------------------------------------------------------------------------------------
+
+    private void initReturnGUI() {
+        JLabel lInfo = new JLabel("Enter Book Title to Return:");
+        JTextField tTitle = new JTextField(20);
+        JButton bReturn = new JButton("Return Book");
+
+        bReturn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String title = tTitle.getText();
+
+                User activeUser = lib.userManager.getActiveUser();
+                if(activeUser == null) {
+                    JOptionPane.showMessageDialog(null, "You must Login first!", "Error", JOptionPane.ERROR_MESSAGE);
+                    dispose();
+                    return;
+                }
+
+                if (!title.isEmpty()) {
+                    String result = lib.returnBook(title, activeUser.getId());
+                    JOptionPane.showMessageDialog(null, result);
+                    dispose();
+                }
+            }
+        });
+        add(lInfo);
+        add(tTitle);
+        add(bReturn);
+    }
 
 
 

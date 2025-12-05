@@ -21,11 +21,11 @@ public class UserManager {
         loadUsersFromFile(); // Load data when system starts
     }
 
-    // -Register User Method
+    // Register User Method
     public User registerUser(String name, String surname, int age) {
         User newUser = new User(name, surname, age);
 
-        // Add to memory structures
+        // Add to memory structures (Hash Table & BST)
         userTable.put(newUser.getId(), newUser);
         userTree.addByName(newUser);
 
@@ -36,7 +36,7 @@ public class UserManager {
         return newUser;
     }
 
-    // -File Operation: Save Single User
+    // File Operation: Save Single User
     private void saveUserToFile(User user) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(USER_FILE, true))) {
             // Format: Name,Surname,Age,ID
@@ -78,6 +78,7 @@ public class UserManager {
 
     //  Login Method
     public boolean login(String id) {
+        // Retrieve user from Hash Table using ID
         User user = (User) userTable.get(id);
 
         if (user != null) {
@@ -97,10 +98,18 @@ public class UserManager {
         }
     }
 
+    //  Getters
+
     public User getActiveUser() {
         return activeUser;
     }
 
+    // Required for LibraryManager to access User object by ID
+    public User getUser(String id) {
+        return (User) userTable.get(id);
+    }
+
+    //  Console Helpers
 
     public void handleConsoleRegistration() {
         Scanner sc = new Scanner(System.in);
@@ -115,17 +124,28 @@ public class UserManager {
         System.out.print("User ID: "); String id = sc.nextLine();
         login(id);
     }
-    // Method: Delete User (Returns true if succesful)
+
+    //  Delete User Method
     public boolean deleteUser(String id) {
-        // Check if user exist in Hash Table(memory)
+        // Check if user exists in Hash Table (memory)
         if(userTable.get(id) == null) {
             return false;
         }
+
+        // Safety: If the active user is the one being deleted, logout first
+        if (activeUser != null && activeUser.getId().equals(id)) {
+            activeUser = null;
+        }
+
         // Remove from Hash Table
         userTable.remove(id);
 
+        // Note: Removing from BST (userTree) is omitted as nameBst does not support deletion yet.
+        // It will be gone from login/memory (Hash Table) which is the critical part.
+
         return removeUserFromFile(id);
     }
+
     // Remove User from File
     private boolean removeUserFromFile(String idToRemove) {
         File inputFile = new File(USER_FILE);
@@ -133,7 +153,8 @@ public class UserManager {
         boolean isFound = false;
 
         try(BufferedReader reader = new BufferedReader(new FileReader(inputFile));
-        BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))){
+            BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))){
+
             String line;
             while((line = reader.readLine()) != null){
                 String[] parts = line.split(",");
@@ -141,7 +162,7 @@ public class UserManager {
                     String currentId = parts[3].trim();
                     if(currentId.equals(idToRemove)) {
                         isFound = true;
-                        continue;
+                        continue; // Skip writing this line (delete logic)
                     }
                 }
                 writer.write(line);
@@ -151,6 +172,8 @@ public class UserManager {
         catch (IOException e) {
             return false;
         }
+
+        // Delete original file and rename temp file
         if(inputFile.delete()) {
             tempFile.renameTo(inputFile);
         }

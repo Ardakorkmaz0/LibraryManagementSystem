@@ -1,5 +1,5 @@
 package librarymanagementsystem;
-
+import java.io.*;
 class sllNode { // single linked list nodes
     sllNode next;
     Object data;
@@ -235,6 +235,14 @@ class authorBst extends bst {
             // Match Found! Add to result list
             sb.append(" - ").append(current.getTitle()).append("\n");
 
+            // Show Status
+            if(current.isAvailable()){
+                sb.append(" [AVAILABLE]");
+            } else {
+                sb.append(" [BORROWED BY: ").append(current.getCurrentHolderId()).append("]");
+            }
+            sb.append("\n");
+
             // Continue searching right subtree because duplicates (same author)
             // are inserted to the right in our add logic.
             searchRec(root.right, author, sb);
@@ -268,6 +276,7 @@ class titleBst extends bst {
         }
         return node;
     }
+
 
 
 
@@ -355,11 +364,39 @@ class titleBst extends bst {
 
         // Process current node
         Book book = (Book) node.data;
-        sb.append(book.getTitle()).append(" - ").append(book.getAuthor()).append("\n"); // Append book details
 
+        sb.append(book.getTitle()).append(" - ").append(book.getAuthor());
+        // Add information based on book status
+        if(book.isAvailable()) {
+            sb.append(" [AVAILABLE]");
+        } else {
+            // Show who borrowed it
+            sb.append(" [BORROWED BY ID: ").append(book.getCurrentHolderId()).append("]");
+        }
+        sb.append("\n");
         // Traverse right subtree
         inOrder(node.right, sb);
     }
+    public void saveTreeToFile(BufferedWriter writer) throws IOException {
+        writeNode(root, writer);
+    }
+
+    private void writeNode(bstNode node, BufferedWriter writer) throws IOException {
+        if (node == null) return;
+
+        // Traverse inorder to write sorted
+        writeNode(node.left, writer);
+
+        Book book = (Book) node.data;
+        // Format: Title,Author,HolderID
+        String holder = (book.getCurrentHolderId() == null) ? "null" : book.getCurrentHolderId();
+        writer.write(book.getTitle() + "," + book.getAuthor() + "," + holder);
+        writer.newLine();
+
+        writeNode(node.right, writer);
+    }
+
+
     
 }
 

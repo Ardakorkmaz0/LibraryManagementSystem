@@ -22,9 +22,8 @@ public class LibraryManager {
     //Helper method to read the text file and populate the BSTs
     private void loadBooksFromFile() {
         File file = new File(FILE_NAME);
-        if (!file.exists()) {
-            return; // No file exists yet, nothing to load.
-        }
+        if (!file.exists()) return;
+
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -32,19 +31,29 @@ public class LibraryManager {
                 if (parts.length >= 2) {
                     String title = parts[0].trim();
                     String author = parts[1].trim();
-                    // Re-create the book object
+
                     Book book = new Book(title, author);
-                    // Add to Memory (BSTs) only (Don't save to file again!)
+
+                    // Check if there is a holder ID
+                    if (parts.length >= 3) {
+                        String holderId = parts[2].trim();
+                        if (!holderId.equals("null") && !holderId.isEmpty()) {
+                            book.setAvailable(false);
+                            book.setCurrentHolderId(holderId);
+                        }
+                    }
+                    // ---------------------------------------------
+
                     titleTree.addByTitle(book);
                     authorTree.addByAuthor(book);
                 }
             }
-            System.out.println("System: Data loaded successfully from file.");
+            System.out.println("System: Data loaded successfully.");
         } catch (IOException e) {
             System.out.println("Error loading data: " + e.getMessage());
         }
     }
-    // --- METHOD 1: CONSOLE INTERFACE ---
+    // CONSOLE INTERFACE
     // This method handles the console input and then calls the main logic below
     void addBook(){
         System.out.println("Adding Book System");
@@ -70,7 +79,7 @@ public class LibraryManager {
         addBook(title, author);
     }
 
-    // --- METHOD 2: CORE LOGIC (USED BY GUI AND CONSOLE) ---
+    //  CORE LOGIC (USED BY GUI AND CONSOLE) ---
     // This method takes parameters directly.
     // It updates the BSTs and saves to the file.
     // Returns true if added successfully, false if duplicate
@@ -139,8 +148,8 @@ public class LibraryManager {
         return true;
     }
 
-    //  --- METHOD 3 : RemoveBook from tree
-    // --- REMOVE METHOD (Reads all lines, skips the one to delete, rewrites file) ---
+    //   RemoveBook from tree
+    //  REMOVE METHOD (Reads all lines, skips the one to delete, rewrites file)
     public boolean removeBookFromFile(String titleInput) {
         String titleToRemove = titleInput.trim().toLowerCase();
         ArrayList<String> bookList = new ArrayList<>();
@@ -184,7 +193,7 @@ public class LibraryManager {
         return false;
     }
 
-    // --- METHOD 3:  SearchBook from tree
+    //  SearchBook from tree
     public Book searchBook(String title) {
         // Search in the BST
         return titleTree.search(title.trim());
@@ -205,6 +214,117 @@ public class LibraryManager {
     
     void loanBook(User user, Book book){
         
+    }
+    // CIRCULATION SYSTEM METHODS
+
+    /*
+
+     - Borrow a book.
+     - Logic:
+
+     - 1. Check if book exists.
+     - 2. If available > Assign to user, set unavailable.
+     - 3. If unavailable > Add user to waitlist.
+
+     */
+    public String borrowBook(String title, String userId) {
+        Book book = titleTree.search(title.trim());
+
+        if (book == null) {
+            return "Error: Book not found.";
+        }
+
+        if (book.isAvailable()) {
+            // Success: User takes the book
+            book.setAvailable(false);
+            book.setCurrentHolderId(userId);
+
+            // Add to User's history (optional, assuming User logic exists)
+            User user = userManager.getUser(userId);
+            if(user != null) {
+                user.addToHistory(book.getTitle());
+            }
+            updateLibraryFile();
+
+            return "Success: You have borrowed '" + book.getTitle() + "'.";
+        } else {
+            // Fail: Book is taken, add to waitlist
+            // We store the User ID in the custom queue
+
+            // First check if user is already holding it
+            if (userId.equals(book.getCurrentHolderId())) {
+                return "Error: You already have this book!";
+            }
+
+            // Add ID to custom queue
+            sllNode newNode = new sllNode(userId);
+
+            // Manual enqueue logic since queue class in Structures.java is basic
+            if (book.waitList.rear != null) {
+                book.waitList.rear.next = newNode;
+            }
+            book.waitList.rear = newNode;
+            if (book.waitList.front == null) {
+                book.waitList.front = newNode;
+            }
+
+            return "Book is currently unavailable. You have been added to the waitlist. Position: " + book.waitList.size();
+        }
+    }
+
+    /*
+     - Return a book.
+     - Logic:
+     - 1. Check waitlist.
+     - 2. If waitlist has people -> Assign to next person.
+     - 3. If empty -> Make book available.
+     */
+    public String returnBook(String title, String userId) {
+        Book book = titleTree.search(title.trim());
+
+        if (book == null) return "Error: Book not found.";
+
+        // Check if this user actually has the book
+        if (!userId.equals(book.getCurrentHolderId())) {
+            return "Error: You do not have this book checked out.";
+        }
+
+        // Logic: Check Waitlist
+        if (book.waitList.size() > 0) {
+            // Dequeue logic for your custom queue
+            sllNode nextNode = book.waitList.front;
+            String nextUserId = (String) nextNode.data;
+
+            // Move front pointer
+            book.waitList.front = book.waitList.front.next;
+            if (book.waitList.front == null) {
+                book.waitList.rear = null;
+            }
+
+            // Assign book to next user
+            book.setCurrentHolderId(nextUserId);
+            book.setAvailable(false); // Still unavailable
+
+            // Save change to file immediately
+            updateLibraryFile();
+
+            return "Book returned. It has been automatically assigned to the next user in waitlist (ID: " + nextUserId + ").";
+        } else {
+            // No one waiting, book goes to shelf
+            book.setAvailable(true);
+            book.setCurrentHolderId(null);
+            updateLibraryFile();
+            return "Success: Book returned to the library.";
+        }
+    }
+    public void updateLibraryFile() {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME))) {
+            // We need to traverse the tree and write all books.
+            // Calling a helper method from titleTree to write to this writer.
+            titleTree.saveTreeToFile(writer);
+        } catch (IOException e) {
+            System.out.println("Error updating file: " + e.getMessage());
+        }
     }
     
 }

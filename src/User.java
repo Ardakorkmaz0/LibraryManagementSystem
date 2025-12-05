@@ -59,4 +59,21 @@ public class User {
     public String getId(){
         return this.id;
     }
+
+    // Requirement: Linked Lists for member's list of borrowed books
+    public void addToHistory(String bookTitle) {
+        sllNode newNode = new sllNode(bookTitle);
+
+        // Insert at the beginning (simplest for history) or end
+        if (history.head == null) {
+            history.head = newNode;
+        } else {
+            // Find the end of the list
+            sllNode current = history.head;
+            while (current.next != null) {
+                current = current.next;
+            }
+            current.next = newNode;
+        }
+    }
 }
