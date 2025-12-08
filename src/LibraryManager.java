@@ -3,6 +3,8 @@ package librarymanagementsystem;
 import java.io.*;
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class LibraryManager {
 
@@ -211,10 +213,7 @@ public class LibraryManager {
     public String showLibrary(){
          return titleTree.showAlphabetic();
     }
-    
-    void loanBook(User user, Book book){
-        
-    }
+
     // CIRCULATION SYSTEM METHODS
 
     /*
@@ -239,27 +238,33 @@ public class LibraryManager {
             book.setAvailable(false);
             book.setCurrentHolderId(userId);
 
-            // Add to User's history (optional, assuming User logic exists)
+            // Add to User's history
             User user = userManager.getUser(userId);
             if(user != null) {
-                user.addToHistory(book.getTitle());
+                // Date and time logic
+                // Get current date and time
+                LocalDateTime now = LocalDateTime.now();
+                // Format the date (e.g., 2025-10-29 14:30)
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+                String formattedDate = now.format(formatter);
+                // Create a combined string: Title + Date
+                String historyEntry = book.getTitle() + " [Borrowed: " + formattedDate + "]";
+                // Add this combined string to history
+                user.addToHistory(historyEntry);
             }
             updateLibraryFile();
+            userManager.rewriteUserFile();
 
             return "Success: You have borrowed '" + book.getTitle() + "'.";
         } else {
-            // Fail: Book is taken, add to waitlist
-            // We store the User ID in the custom queue
-
+            // Rest of the else block remains the same
             // First check if user is already holding it
             if (userId.equals(book.getCurrentHolderId())) {
                 return "Error: You already have this book!";
             }
 
-            // Add ID to custom queue
             sllNode newNode = new sllNode(userId);
 
-            // Manual enqueue logic since queue class in Structures.java is basic
             if (book.waitList.rear != null) {
                 book.waitList.rear.next = newNode;
             }
@@ -289,9 +294,21 @@ public class LibraryManager {
             return "Error: You do not have this book checked out.";
         }
 
+        // LOG THE RETURN FOR THE CURRENT USER
+        User returningUser = userManager.getUser(userId);
+        if (returningUser != null) {
+            LocalDateTime now = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+            String formattedDate = now.format(formatter);
+
+            // Add "Returned" entry to history
+            returningUser.addToHistory(book.getTitle() + " [Returned: " + formattedDate + "]");
+        }
+        // ------------------------------------------------
+
         // Logic: Check Waitlist
         if (book.waitList.size() > 0) {
-            // Dequeue logic for your custom queue
+            // Dequeue logic
             sllNode nextNode = book.waitList.front;
             String nextUserId = (String) nextNode.data;
 
@@ -305,15 +322,30 @@ public class LibraryManager {
             book.setCurrentHolderId(nextUserId);
             book.setAvailable(false); // Still unavailable
 
-            // Save change to file immediately
-            updateLibraryFile();
+            //  LOG BORROW FOR THE NEXT USER (FROM WAITLIST)
+            User nextUser = userManager.getUser(nextUserId);
+            if (nextUser != null) {
+                LocalDateTime now = LocalDateTime.now();
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+                String formattedDate = now.format(formatter);
+
+                // Add "Borrowed" entry for the new owner
+                nextUser.addToHistory(book.getTitle() + " [Borrowed: " + formattedDate + "]");
+            }
+            // --------------------------------------------------------
+
+            updateLibraryFile(); // Save books
+            userManager.rewriteUserFile(); // Save users
 
             return "Book returned. It has been automatically assigned to the next user in waitlist (ID: " + nextUserId + ").";
         } else {
             // No one waiting, book goes to shelf
             book.setAvailable(true);
             book.setCurrentHolderId(null);
-            updateLibraryFile();
+
+            updateLibraryFile(); // Save books
+            userManager.rewriteUserFile(); // Save users
+
             return "Success: Book returned to the library.";
         }
     }

@@ -120,17 +120,24 @@ class bst { // binary search tree operations
 
 // NOTE: idBst class removed because Hash Table is required for ID lookups.
 class nameBst extends bst {
+    // INSERTION LOGIC (Updated for Name + Surname)
     void addByName(User user){
         root = insertUserName(root, user);
-        // in here, push a stack of reverse this method for undo
     }
+
     private bstNode insertUserName(bstNode node, User user){
         if(node == null) {
             return new bstNode(user);
         }
         else{
             User current = (User) node.data;
-            if(user.getName().compareToIgnoreCase(current.getName()) < 0) {
+
+            // Combine Name + Surname for comparison
+            String userFull = user.getName() + " " + user.getSurname();
+            String currentFull = current.getName() + " " + current.getSurname();
+
+            // Compare full names alphabetically
+            if(userFull.compareToIgnoreCase(currentFull) < 0) {
                 node.left = insertUserName(node.left, user);
             }
             else{
@@ -138,6 +145,81 @@ class nameBst extends bst {
             }
         }
         return node;
+    }
+
+    //  SEARCH LOGIC (Updated for Name + Surname & History)
+    public String searchUserByName(String fullNameInput) {
+        StringBuilder result = new StringBuilder();
+        // Trim input when searching
+        searchRec(root, fullNameInput.trim(), result);
+
+        if (result.length() == 0) return null; // No users found
+        return result.toString();
+    }
+
+    private void searchRec(bstNode root, String searchInput, StringBuilder sb) {
+        if (root == null) return;
+
+        User current = (User) root.data;
+
+        // Full name of the current user
+        String currentFull = current.getName() + " " + current.getSurname();
+
+        // Compare search input with current full name
+        int cmp = searchInput.compareToIgnoreCase(currentFull);
+
+        if (cmp < 0) {
+            // Go left
+            searchRec(root.left, searchInput, sb);
+        } else if (cmp > 0) {
+            // Go right
+            searchRec(root.right, searchInput, sb);
+        } else {
+            // --- MATCH FOUND ---
+            sb.append("User Found:\n");
+            sb.append("Full Name: ").append(current.getName()).append(" ").append(current.getSurname()).append("\n");
+            sb.append("ID: ").append(current.getId()).append("\n");
+            sb.append("Age: ").append(current.getAge()).append("\n");
+
+            // Show History
+            sb.append("Book History:\n");
+            sb.append(current.getHistoryString());
+            sb.append("-----------------\n");
+
+            // Continue searching right for duplicates
+            searchRec(root.right, searchInput, sb);
+        }
+    }
+    // Traverses the tree and writes user data + history to the file
+    public void saveUsersToWriter(BufferedWriter writer) throws IOException {
+        writeUserNode(root, writer);
+    }
+    private void writeUserNode(bstNode node, BufferedWriter writer) throws IOException {
+        if (node == null) return;
+        // Traverse left
+        writeUserNode(node.left, writer);
+        // Process User
+        User user = (User) node.data;
+        // Basic Info
+        StringBuilder line = new StringBuilder();
+        line.append(user.getName()).append(",")
+                .append(user.getSurname()).append(",")
+                .append(user.getAge()).append(",")
+                .append(user.getId());
+
+        // Append History (separated by %)
+        sllNode temp = user.history.head;
+        if (temp != null) {
+            line.append(","); // Add a comma before starting history
+            while (temp != null) {
+                line.append(temp.data).append("%"); // Use % as separator for books
+                temp = temp.next;
+            }
+        }
+        writer.write(line.toString());
+        writer.newLine();
+        // Traverse right
+        writeUserNode(node.right, writer);
     }
 }
 class authorBst extends bst {
@@ -218,34 +300,50 @@ class authorBst extends bst {
         if (result.length() == 0) return null; // No books found
         return result.toString();
     }
-    
-    private void searchRec(bstNode root, String author, StringBuilder sb) {
+
+    private void searchRec(bstNode root, String searchInput, StringBuilder sb) {
         if (root == null) return;
 
-        Book current = (Book) root.data;
-        int cmp = author.compareToIgnoreCase(current.getAuthor());
+        User current = (User) root.data;
+
+        // Construct the full name: "Name Surname"
+        String currentFull = current.getName() + " " + current.getSurname();
+
+        int cmp = searchInput.compareToIgnoreCase(currentFull);
 
         if (cmp < 0) {
-            // Search Author is smaller, go left
-            searchRec(root.left, author, sb);
+            // Go left
+            searchRec(root.left, searchInput, sb);
         } else if (cmp > 0) {
-            // Search Author is larger, go right
-            searchRec(root.right, author, sb);
+            // Go right
+            searchRec(root.right, searchInput, sb);
         } else {
-            // Match Found! Add to result list
-            sb.append(" - ").append(current.getTitle()).append("\n");
+            // User Found
+            sb.append("User Found:\n");
+            sb.append("Name: ").append(current.getName()).append(" ").append(current.getSurname()).append("\n");
+            sb.append("ID: ").append(current.getId()).append("\n");
+            sb.append("Age: ").append(current.getAge()).append("\n");
 
-            // Show Status
-            if(current.isAvailable()){
-                sb.append(" [AVAILABLE]");
+            // Show book history
+            sb.append("Book History:\n");
+
+            // Access the 'history' linked list from the User object
+            sll historyList = current.history;
+            sllNode tempNode = historyList.head;
+
+            if (tempNode == null) {
+                sb.append(" - No book records.\n");
             } else {
-                sb.append(" [BORROWED BY: ").append(current.getCurrentHolderId()).append("]");
+                // Traverse the Linked List (sll)
+                while (tempNode != null) {
+                    sb.append(" -> ").append(tempNode.data).append("\n");
+                    tempNode = tempNode.next;
+                }
             }
-            sb.append("\n");
+            sb.append("-----------------\n");
 
-            // Continue searching right subtree because duplicates (same author)
-            // are inserted to the right in our add logic.
-            searchRec(root.right, author, sb);
+            // Continue searching right for duplicates
+            searchRec(root.right, searchInput, sb);
         }
     }
 }

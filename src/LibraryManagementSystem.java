@@ -25,7 +25,7 @@ public class LibraryManagementSystem {
             System.out.println("7 - Logout (Now Console)");
             System.out.println("8 - Remove User (Open GUI)");
             System.out.println("9 - Undo Operation (Open GUI)");
-            System.out.println("11 - Loan Book (Not completed)");
+            System.out.println("10 - Search User (Open GUI)");
             System.out.println("12 - Borrow Book (Open GUI)");
             System.out.println("13 - Return Book (Open GUI)");
             System.out.println("0 - Exit");
@@ -92,8 +92,19 @@ public class LibraryManagementSystem {
                         new LibraryGUI(lib, 8);
                     });
                 }
-                else if(option == 11) {
-                    // loan book codes
+                else if(option == 9) {
+                    System.out.println("Launching Undo Window...");
+                    // Open UI in mode 9
+                    SwingUtilities.invokeLater(() -> {
+                        new LibraryGUI(lib, 9);
+                    });
+                }
+                else if (option == 10) {
+                    System.out.println("Launching Search User Window...");
+                    // Open UI in mode 10
+                    SwingUtilities.invokeLater(() -> {
+                        new LibraryGUI(lib, 10);
+                    });
                 }
                 else if(option == 12) {
                     if(lib.userManager.getActiveUser() == null){
@@ -112,13 +123,6 @@ public class LibraryManagementSystem {
                             new LibraryGUI(lib, 13);
                         });
                     }
-                }
-                else if(option == 9) {
-                    System.out.println("Launching Undo Window...");
-                    // Open UI in mode 9
-                    SwingUtilities.invokeLater(() -> {
-                        new LibraryGUI(lib, 9);
-                    });
                 }
                 else if (option == 0) {
                     System.out.println("Exiting system...");

@@ -56,6 +56,11 @@ public class LibraryGUI extends JFrame {
             setSize(200, 150);
             initUndoGUI();
         }
+        else if (option == 10) { // New Option: Search User
+            setTitle("Search User");
+            setSize(350, 150);
+            initSearchUserGUI();
+        }
         else if (option == 12) { // Borrow Book
             setTitle("Borrow Book");
             setSize(300, 200);
@@ -505,7 +510,67 @@ public class LibraryGUI extends JFrame {
         add(bReturn);
     }
 
+    //-------------------------------------------------------------------------------------------------------------------------------------------
 
+
+    private void initSearchUserGUI() {
+        JLabel lInfo = new JLabel("Select Search Method:");
+
+        // Button 1: Search by ID
+        JButton bSearchId = new JButton("Search by ID");
+        bSearchId.setPreferredSize(new Dimension(140, 40));
+
+        // Button 2: Search by Name
+        JButton bSearchName = new JButton("Search by Name");
+        bSearchName.setPreferredSize(new Dimension(140, 40));
+
+        // Action: Search by ID
+        bSearchId.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String id = JOptionPane.showInputDialog(null, "Enter User ID:");
+                if (id != null && !id.trim().isEmpty()) {
+                    String result = lib.userManager.searchByIdFormatted(id.trim());
+
+                    if (result != null) {
+                        JOptionPane.showMessageDialog(null, result, "Search Result", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "User ID not found!", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }
+        });
+
+        // Action: Search by Name and Surname
+        bSearchName.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Prompt user for full name
+                String fullName = JOptionPane.showInputDialog(null, "Enter Name and Surname (e.g. Arda Korkmaz):");
+
+                if (fullName != null && !fullName.trim().isEmpty()) {
+                    // Call the search method with the full string
+                    String result = lib.userManager.searchByName(fullName.trim());
+
+                    if (result != null) {
+                        // Display results
+                        JTextArea textArea = new JTextArea(result);
+                        textArea.setEditable(false);
+                        JScrollPane scrollPane = new JScrollPane(textArea);
+                        scrollPane.setPreferredSize(new Dimension(300, 200));
+
+                        JOptionPane.showMessageDialog(null, scrollPane, "Search Results", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "No user found with this name.", "Result", JOptionPane.WARNING_MESSAGE);
+                    }
+                }
+            }
+        });
+
+        add(lInfo);
+        add(bSearchId);
+        add(bSearchName);
+    }
 
 
 

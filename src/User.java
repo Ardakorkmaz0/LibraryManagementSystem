@@ -61,10 +61,11 @@ public class User {
     }
 
     // Requirement: Linked Lists for member's list of borrowed books
+    // Called by LibraryManager when a user borrows a book
     public void addToHistory(String bookTitle) {
         sllNode newNode = new sllNode(bookTitle);
 
-        // Insert at the beginning (simplest for history) or end
+        // Insert at the end of the list
         if (history.head == null) {
             history.head = newNode;
         } else {
@@ -75,5 +76,22 @@ public class User {
             }
             current.next = newNode;
         }
+    }
+
+    // Returns the borrow history formatted for display
+    // Used by Structures.java and UserManager.java for search results
+    public String getHistoryString() {
+        StringBuilder sb = new StringBuilder();
+
+        if (history.head == null) {
+            sb.append(" - No book records.\n");
+        } else {
+            sllNode current = history.head;
+            while (current != null) {
+                sb.append(" -> ").append(current.data).append("\n");
+                current = current.next;
+            }
+        }
+        return sb.toString();
     }
 }

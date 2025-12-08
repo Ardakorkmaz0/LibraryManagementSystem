@@ -50,22 +50,32 @@ public class UserManager {
     // File Operation: Load All Users
     private void loadUsersFromFile() {
         File file = new File(USER_FILE);
-        if (!file.exists()) return; // No users yet
+        if (!file.exists()) return;
 
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
-                if (parts.length == 4) {
+                if (parts.length >= 4) {
                     String name = parts[0].trim();
                     String surname = parts[1].trim();
                     int age = Integer.parseInt(parts[2].trim());
                     String id = parts[3].trim();
 
-                    // Re-create user using the specific constructor
                     User user = new User(name, surname, age, id);
 
-                    // Add to memory (Hash Table & BST)
+                    // Load History if exists (Part 5)
+                    if (parts.length > 4) {
+                        String historyRaw = parts[4];
+                        // Split by '%' to get individual books
+                        String[] books = historyRaw.split("%");
+                        for (String b : books) {
+                            if (!b.trim().isEmpty()) {
+                                user.addToHistory(b);
+                            }
+                        }
+                    }
+
                     userTable.put(id, user);
                     userTree.addByName(user);
                 }
@@ -178,5 +188,31 @@ public class UserManager {
             tempFile.renameTo(inputFile);
         }
         return isFound;
+    }
+    public String searchByName(String name) {
+        return userTree.searchUserByName(name.trim());
+    }
+
+    // Search by ID (using Hash Table)
+    // We reuse the existing getUser() but format it for display
+    public String searchByIdFormatted(String id) {
+        User user = (User) userTable.get(id);
+        if (user != null) {
+            return "User Found:\n" +
+                    "Name: " + user.getName() + " " + user.getSurname() + "\n" +
+                    "ID: " + user.getId() + "\n" +
+                    "Age: " + user.getAge() + "\n" +
+                    "Book History:\n" +
+                    user.getHistoryString(); // Calling the new helper method
+        }
+        return null;
+    }
+    public void rewriteUserFile() {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(USER_FILE))) {
+            // Use the BST method we created in Step 1
+            userTree.saveUsersToWriter(writer);
+        } catch (IOException e) {
+            System.out.println("Error updating user file: " + e.getMessage());
+        }
     }
 }
