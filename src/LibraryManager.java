@@ -55,32 +55,6 @@ public class LibraryManager {
             System.out.println("Error loading data: " + e.getMessage());
         }
     }
-    // CONSOLE INTERFACE
-    // This method handles the console input and then calls the main logic below
-    void addBook(){
-        System.out.println("Adding Book System");
-        System.out.println("---------------------------------");
-
-        String title;
-        System.out.println("Enter book's title : ");
-        while(true){
-            title = input.nextLine().trim().toLowerCase();
-            if(!title.isEmpty()) break;
-            else System.out.println("The title is invalid. Try again : ");
-        }
-
-        String author;
-        System.out.println("Enter book's author : ");
-        while(true){
-            author = input.nextLine().trim().toLowerCase();
-            if(author.length() > 1) break;
-            else System.out.println("The author name is invalid. Try again : ");
-        }
-
-        // REUSE: Call the main logic method (Method 2)
-        addBook(title, author);
-    }
-
     // Main add book logic
     // This method takes parameters directly.
     // It updates the BSTs and saves to the file.

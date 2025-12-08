@@ -119,21 +119,6 @@ public class UserManager {
         return (User) userTable.get(id);
     }
 
-    //  Console Helpers
-
-    public void handleConsoleRegistration() {
-        Scanner sc = new Scanner(System.in);
-        System.out.print("Name: "); String n = sc.nextLine();
-        System.out.print("Surname: "); String s = sc.nextLine();
-        System.out.print("Age: "); int a = sc.nextInt();
-        registerUser(n, s, a);
-    }
-
-    public void handleConsoleLogin() {
-        Scanner sc = new Scanner(System.in);
-        System.out.print("User ID: "); String id = sc.nextLine();
-        login(id);
-    }
 
     //  Delete User Method
     public boolean deleteUser(String id) {
