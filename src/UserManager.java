@@ -64,7 +64,7 @@ public class UserManager {
 
                     User user = new User(name, surname, age, id);
 
-                    // Load History if exists (Part 5)
+                    // Load History if exists
                     if (parts.length > 4) {
                         String historyRaw = parts[4];
                         // Split by '%' to get individual books
@@ -150,7 +150,7 @@ public class UserManager {
         // Remove from Hash Table
         userTable.remove(id);
 
-        // Note: Removing from BST (userTree) is omitted as nameBst does not support deletion yet.
+
         // It will be gone from login/memory (Hash Table) which is the critical part.
 
         return removeUserFromFile(id);
@@ -209,7 +209,7 @@ public class UserManager {
     }
     public void rewriteUserFile() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(USER_FILE))) {
-            // Use the BST method we created in Step 1
+            // Use the BST method
             userTree.saveUsersToWriter(writer);
         } catch (IOException e) {
             System.out.println("Error updating user file: " + e.getMessage());

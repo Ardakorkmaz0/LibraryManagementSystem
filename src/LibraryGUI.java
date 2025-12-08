@@ -18,8 +18,8 @@ public class LibraryGUI extends JFrame {
         setLocationRelativeTo(null);
         setLayout(new FlowLayout());
 
-        if (option == 1) {
-            setTitle("Add Book"); // Option for add book
+        if (option == 1) { // Option for add book
+            setTitle("Add Book");
             setSize(300, 300);
             initAddBookGUI();
         } else if (option == 2) { // Option for remove book
@@ -28,10 +28,10 @@ public class LibraryGUI extends JFrame {
             initRemoveBookGUI();
         } else if (option == 3) { // Option for search book
             setTitle("Search Book");
-            setSize(350, 150); // Adjusted size for two buttons
+            setSize(350, 150);
             initSearchBookGUI();
         }
-        else if(option == 4){
+        else if(option == 4){ // Option for showing inventory
             setTitle("Inventory");
             setSize(350, 350);
             initShowLibraryGUI();
@@ -51,22 +51,22 @@ public class LibraryGUI extends JFrame {
             setSize(300, 150);
             initDeleteUserGUI();
         }
-        else if(option == 9){
+        else if(option == 9){ // Option for Undo Operation
             setTitle("Undo Operation");
             setSize(200, 150);
             initUndoGUI();
         }
-        else if (option == 10) { // New Option: Search User
+        else if (option == 10) { // Option for search User
             setTitle("Search User");
             setSize(350, 150);
             initSearchUserGUI();
         }
-        else if (option == 12) { // Borrow Book
+        else if (option == 12) { // Option for borrow Book
             setTitle("Borrow Book");
             setSize(300, 200);
             initBorrowGUI();
         }
-        else if (option == 13) { // Return Book
+        else if (option == 13) { // Option for return Book
             setTitle("Return Book");
             setSize(300, 200);
             initReturnGUI();

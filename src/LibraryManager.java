@@ -21,7 +21,7 @@ public class LibraryManager {
         loadBooksFromFile();
     }
 
-    //Helper method to read the text file and populate the BSTs
+    // Load books from file
     private void loadBooksFromFile() {
         File file = new File(FILE_NAME);
         if (!file.exists()) return;
@@ -81,7 +81,7 @@ public class LibraryManager {
         addBook(title, author);
     }
 
-    //  CORE LOGIC (USED BY GUI AND CONSOLE) ---
+    // Main add book logic
     // This method takes parameters directly.
     // It updates the BSTs and saves to the file.
     // Returns true if added successfully, false if duplicate
@@ -89,8 +89,6 @@ public class LibraryManager {
         String cleanTitle = title.trim().toLowerCase();
         String cleanAuthor = author.trim().toLowerCase();
 
-        // 1. Check if book already exists
-        // NOTE: Make sure you added the 'search' method to titleBst as discussed before.
         if (titleTree.search(cleanTitle) != null) {
             System.out.println("Error: Book '" + cleanTitle + "' already exists.");
             return false; // Duplicate found, do not add
@@ -157,7 +155,7 @@ public class LibraryManager {
         ArrayList<String> bookList = new ArrayList<>();
         boolean isFound = false;
 
-        // Step A: Read file and filter
+
         try (BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME))) {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -180,7 +178,7 @@ public class LibraryManager {
             return false;
         }
 
-        // Step B: Rewrite file if book was found
+
         if (isFound) {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME))) {
                 for (String bookLine : bookList) {
@@ -214,13 +212,8 @@ public class LibraryManager {
          return titleTree.showAlphabetic();
     }
 
-    // CIRCULATION SYSTEM METHODS
 
-    /*
-
-     - Borrow a book.
-     - Logic:
-
+    /* - Logic:
      - 1. Check if book exists.
      - 2. If available > Assign to user, set unavailable.
      - 3. If unavailable > Add user to waitlist.
@@ -294,7 +287,7 @@ public class LibraryManager {
             return "Error: You do not have this book checked out.";
         }
 
-        // LOG THE RETURN FOR THE CURRENT USER
+        // Log the return for the current user
         User returningUser = userManager.getUser(userId);
         if (returningUser != null) {
             LocalDateTime now = LocalDateTime.now();

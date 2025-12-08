@@ -43,7 +43,7 @@ public class User {
         return Integer.toString(230316024 / Integer.valueOf(this.name.charAt(0)) + Integer.valueOf(this.surname.charAt(0)) + counter);
     }
 
-    // GETTERS (Needed for File Saving & UI)
+    // GETTERS
     public String getName(){
         return this.name;
     }
@@ -60,7 +60,6 @@ public class User {
         return this.id;
     }
 
-    // Requirement: Linked Lists for member's list of borrowed books
     // Called by LibraryManager when a user borrows a book
     public void addToHistory(String bookTitle) {
         sllNode newNode = new sllNode(bookTitle);

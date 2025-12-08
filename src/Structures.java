@@ -120,7 +120,7 @@ class bst { // binary search tree operations
 
 // NOTE: idBst class removed because Hash Table is required for ID lookups.
 class nameBst extends bst {
-    // INSERTION LOGIC (Updated for Name + Surname)
+    // INSERTION LOGIC (for Name + Surname)
     void addByName(User user){
         root = insertUserName(root, user);
     }
@@ -243,7 +243,7 @@ class authorBst extends bst {
         return node;
     }
 
-    // --- Delete method for Author Tree ---
+    // Delete method for Author Tree
     // Needed by LibraryManager to remove book by Author
     public void delete(String author, String title) {
         root = deleteRec(root, author, title);
@@ -378,7 +378,7 @@ class titleBst extends bst {
 
 
 
-    // --- Delete method for Title Tree ---
+    //  Delete method for Title Tree
     // Needed by LibraryManager to remove book by Title
     public void delete(String title) {
         root = deleteRec(root, title);
