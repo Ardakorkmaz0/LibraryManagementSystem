@@ -63,7 +63,7 @@ public class LibraryManager {
         String cleanTitle = title.trim().toLowerCase();
         String cleanAuthor = author.trim().toLowerCase();
 
-        if (titleTree.search(cleanTitle) != null) {
+        if (titleTree.search(cleanTitle).getAuthor() == cleanAuthor) {
             System.out.println("Error: Book '" + cleanTitle + "' already exists.");
             return false; // Duplicate found, do not add
         }

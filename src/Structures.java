@@ -301,6 +301,30 @@ class authorBst extends bst {
         return result.toString();
     }
 
+    private void searchRecForAuthor(bstNode root, String author, StringBuilder sb) {
+        if(root == null){
+            return;
+        }
+        
+        Book current = (Book) root.data;
+        
+        int cmp = author.compareToIgnoreCase(current.getAuthor());
+        
+        if (cmp < 0){
+            searchRecForAuthor(root.left, author, sb);
+        }
+        else if (cmp > 0){
+            searchRecForAuthor(root.right, author, sb);
+        }
+        else {
+            sb.append("Book Found:\n");
+            sb.append("Title: ").append(current.getTitle());
+            sb.append("Author : ").append(current.getAuthor());
+            
+            searchRecForAuthor(root.right, author, sb);
+        }
+    }
+    
     private void searchRec(bstNode root, String searchInput, StringBuilder sb) {
         if (root == null) return;
 
