@@ -8,7 +8,6 @@ public class LibraryManagementSystem {
     public static void main(String[] args) {
         LibraryManager lib = new LibraryManager(); // construct a library
         Scanner sc = new Scanner(System.in);
-        UndoManager undoManager = lib.undoManager;
         UserManager userManager = lib.userManager;
 
         boolean isRunning = true;

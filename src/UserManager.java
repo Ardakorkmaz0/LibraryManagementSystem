@@ -11,10 +11,15 @@ public class UserManager {
     // BST for managing members by name
     private nameBst userTree;
 
+    private UndoManager undoManager;
+    private LibraryManager lib;
+    
     private User activeUser;
     private static final String USER_FILE = "library_users.txt"; // File to store users
 
-    public UserManager() {
+    public UserManager(LibraryManager lib, UndoManager undoManager) {
+        this.lib = lib;
+        this.undoManager = undoManager;
         userTable = new HashTable(100);
         userTree = new nameBst();
         activeUser = null;
@@ -31,7 +36,7 @@ public class UserManager {
 
         // Save to file immediately
         saveUserToFile(newUser);
-
+        undoManager.addAction(new undoRegisterNewUser(lib, newUser));
         System.out.println("User Registered: " + newUser.getName() + " (ID: " + newUser.getId() + ")");
         return newUser;
     }
@@ -134,10 +139,10 @@ public class UserManager {
 
         // Remove from Hash Table
         userTable.remove(id);
-
-
+        // ---------------------------------------------------------------------------
+        // NOT COMPLETED !!! undoManager.addAction(new undoRemoveUser(lib, id));     |
+        // ---------------------------------------------------------------------------
         // It will be gone from login/memory (Hash Table) which is the critical part.
-
         return removeUserFromFile(id);
     }
 

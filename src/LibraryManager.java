@@ -11,10 +11,11 @@ public class LibraryManager {
     private titleBst titleTree = new titleBst();
     private authorBst authorTree = new authorBst();
 
-    public UserManager userManager = new UserManager();
-
-    private static final String FILE_NAME = "library_books.txt"; // File to save books
     public UndoManager undoManager = new UndoManager();
+    public UserManager userManager = new UserManager(this, undoManager);
+    
+    private static final String FILE_NAME = "library_books.txt"; // File to save books
+    
 
     Scanner input = new Scanner(System.in);
     public LibraryManager() {

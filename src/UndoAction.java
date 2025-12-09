@@ -76,3 +76,23 @@ class undoRegisterNewUser implements UndoAction{
         return this.name;
     }
 }
+
+class undoRemoveUser implements UndoAction{
+    
+    private LibraryManager lib;
+    private User user;
+    private final String name = "Remove user";
+    
+    public undoRemoveUser(LibraryManager lib, User user){
+        this.lib = lib;
+        this.user = user;
+    }
+    @Override
+    public void undo(){
+        lib.userManager.registerUser(user.getName(), user.getSurname(), Integer.parseInt(user.getId()));
+    }
+    @Override
+    public String getName(){
+        return this.name;
+    }
+}
