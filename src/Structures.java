@@ -295,7 +295,7 @@ class authorBst extends bst {
     // Returns a formatted string of all books found for that author
     public String searchBooks(String author) {
         StringBuilder result = new StringBuilder();
-        searchRec(root, author, result);
+        searchRecForAuthor(root, author, result);
 
         if (result.length() == 0) return null; // No books found
         return result.toString();
@@ -319,57 +319,12 @@ class authorBst extends bst {
         else {
             sb.append("Book Found:\n");
             sb.append("Title: ").append(current.getTitle());
-            sb.append("Author : ").append(current.getAuthor());
-            
+            sb.append(" Author : ").append(current.getAuthor());
+            sb.append("\n");
             searchRecForAuthor(root.right, author, sb);
         }
     }
     
-    private void searchRec(bstNode root, String searchInput, StringBuilder sb) {
-        if (root == null) return;
-
-        User current = (User) root.data;
-
-        // Construct the full name: "Name Surname"
-        String currentFull = current.getName() + " " + current.getSurname();
-
-        int cmp = searchInput.compareToIgnoreCase(currentFull);
-
-        if (cmp < 0) {
-            // Go left
-            searchRec(root.left, searchInput, sb);
-        } else if (cmp > 0) {
-            // Go right
-            searchRec(root.right, searchInput, sb);
-        } else {
-            // User Found
-            sb.append("User Found:\n");
-            sb.append("Name: ").append(current.getName()).append(" ").append(current.getSurname()).append("\n");
-            sb.append("ID: ").append(current.getId()).append("\n");
-            sb.append("Age: ").append(current.getAge()).append("\n");
-
-            // Show book history
-            sb.append("Book History:\n");
-
-            // Access the 'history' linked list from the User object
-            sll historyList = current.history;
-            sllNode tempNode = historyList.head;
-
-            if (tempNode == null) {
-                sb.append(" - No book records.\n");
-            } else {
-                // Traverse the Linked List (sll)
-                while (tempNode != null) {
-                    sb.append(" -> ").append(tempNode.data).append("\n");
-                    tempNode = tempNode.next;
-                }
-            }
-            sb.append("-----------------\n");
-
-            // Continue searching right for duplicates
-            searchRec(root.right, searchInput, sb);
-        }
-    }
 }
 
 
