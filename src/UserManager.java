@@ -119,7 +119,7 @@ public class UserManager {
         return activeUser;
     }
 
-    // Required for LibraryManager to access User object by ID
+    // LibraryManager to access User object by ID
     public User getUser(String id) {
         return (User) userTable.get(id);
     }

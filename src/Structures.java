@@ -320,6 +320,12 @@ class authorBst extends bst {
             sb.append("Book Found:\n");
             sb.append("Title: ").append(current.getTitle());
             sb.append(" Author : ").append(current.getAuthor());
+            // Check availability status
+            if(current.isAvailable()){
+                sb.append(" [AVAILABLE]");
+            } else {
+                sb.append(" [BORROWED BY ID: ").append(current.getCurrentHolderId()).append("]");
+            }
             sb.append("\n");
             searchRecForAuthor(root.right, author, sb);
         }
@@ -467,7 +473,7 @@ class titleBst extends bst {
         Book book = (Book) node.data;
         // Format: Title,Author,HolderID
         String holder = (book.getCurrentHolderId() == null) ? "null" : book.getCurrentHolderId();
-        writer.write(book.getTitle() + "," + book.getAuthor() + "," + holder);
+        writer.write(book.getTitle() + "," + book.getAuthor() + "," + holder + "," + book.getBorrowCount());
         writer.newLine();
 
         writeNode(node.right, writer);
@@ -554,5 +560,132 @@ class stack {
         return action;
     }
 
-    
+}
+// Keeps track of the "Most Popular Book" using a Max-Heap
+class PopularityHeap {
+    private Book[] heap;
+    private int size;
+    private int capacity;
+
+    public PopularityHeap(int capacity) {
+        this.capacity = capacity;
+        this.size = 0;
+        this.heap = new Book[capacity];
+    }
+
+    private int parent(int i) { return (i - 1) / 2; }
+    private int leftChild(int i) { return (2 * i) + 1; }
+    private int rightChild(int i) { return (2 * i) + 2; }
+
+    private void swap(int i, int j) {
+        Book temp = heap[i];
+        heap[i] = heap[j];
+        heap[j] = temp;
+    }
+
+    // Moves the element up to maintain Max-Heap property
+    private void heapifyUp(int i) {
+        while (i > 0 && heap[parent(i)].getBorrowCount() < heap[i].getBorrowCount()) {
+            swap(i, parent(i));
+            i = parent(i);
+        }
+    }
+
+    // Moves the element down to maintain Max-Heap property
+    private void heapifyDown(int i) {
+        int maxIndex = i;
+        int left = leftChild(i);
+        int right = rightChild(i);
+
+        if (left < size && heap[left].getBorrowCount() > heap[maxIndex].getBorrowCount()) {
+            maxIndex = left;
+        }
+
+        if (right < size && heap[right].getBorrowCount() > heap[maxIndex].getBorrowCount()) {
+            maxIndex = right;
+        }
+
+        if (i != maxIndex) {
+            swap(i, maxIndex);
+            heapifyDown(maxIndex);
+        }
+    }
+
+    // Called when loading books from file (Restore state)
+    public void addExisting(Book book) {
+        if (size < capacity) {
+            heap[size] = book;
+            heapifyUp(size);
+            size++;
+        }
+    }
+
+    // Called when a user borrows a book
+    public void incrementPopularity(Book book) {
+        int index = -1;
+
+        // Find the book in the heap
+        for (int i = 0; i < size; i++) {
+            if (heap[i] == book) { // Compare references
+                index = i;
+                break;
+            }
+        }
+
+        if (index != -1) {
+            // Book is already tracked, just update count
+            book.incrementBorrowCount();
+            // Since count increased, it might need to go UP
+            heapifyUp(index);
+        } else {
+            // New book entering the popularity contest
+            if (size < capacity) {
+                book.incrementBorrowCount();
+                heap[size] = book;
+                heapifyUp(size);
+                size++;
+            }
+        }
+    }
+
+    // Returns the top most popular book
+    public Book getMostPopular() {
+        if (size == 0) return null;
+        return heap[0];
+    }
+    // Returns a string of all books sorted by popularity (High to Low)
+    // Does not affect the actual Heap structure.
+    public String getSortedList() {
+        if (size == 0) return "No books have been borrowed yet.";
+
+        //  Create a shallow copy of the heap array to avoid messing up the original
+        Book[] tempArray = new Book[size];
+        for (int i = 0; i < size; i++) {
+            tempArray[i] = heap[i];
+        }
+
+        // Sort the temporary array (Bubble Sort for simplicity)
+        // Sorting from Highest Borrow Count to Lowest
+        for (int i = 0; i < size - 1; i++) {
+            for (int j = 0; j < size - i - 1; j++) {
+                if (tempArray[j].getBorrowCount() < tempArray[j + 1].getBorrowCount()) {
+                    // Swap
+                    Book temp = tempArray[j];
+                    tempArray[j] = tempArray[j + 1];
+                    tempArray[j + 1] = temp;
+                }
+            }
+        }
+
+        // Build the String
+        StringBuilder sb = new StringBuilder();
+        sb.append(String.format("%-30s %-10s\n", "Title", "Author"));
+        sb.append("--------------------------------------------------------------\n");
+
+        for (int i = 0; i < size; i++) {
+            Book b = tempArray[i];
+            sb.append(String.format("%-30s %-10s\n",b.getTitle(), b.getAuthor()));
+        }
+        return sb.toString();
+    }
 }

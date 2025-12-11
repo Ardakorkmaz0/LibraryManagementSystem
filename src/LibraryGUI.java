@@ -33,7 +33,7 @@ public class LibraryGUI extends JFrame {
         }
         else if(option == 4){ // Option for showing inventory
             setTitle("Inventory");
-            setSize(350, 350);
+            setSize(600, 350);
             initShowLibraryGUI();
         }
         else if (option == 5) { // Option for registering new member
@@ -229,17 +229,55 @@ public class LibraryGUI extends JFrame {
     }
 
 
+//-------------------------------------------------------------------------------------------------------------------------------------------
 
     private void initShowLibraryGUI() {
-        JLabel lTitle = new JLabel("Inventory:");
-        // JTextArea is better for multi-line text display
-        JTextArea tArea = new JTextArea(15, 30);
-        tArea.setText(lib.showLibrary()); // Call the method and fill the area
-        tArea.setEditable(false); // Make it read-only
-        // Add scroll bar in case of many books
+        // Use BorderLayout to place buttons at the top and text in the center
+        setLayout(new BorderLayout());
+
+        // Top Panel for Buttons
+        JPanel pButtons = new JPanel();
+        JButton bAlphabetic = new JButton("Sort by Title (A-Z)");
+        JButton bPopularity = new JButton("Sort by Popularity");
+
+        // Add buttons to the panel
+        pButtons.add(bAlphabetic);
+        pButtons.add(bPopularity);
+
+        // Center Area for Text
+        JTextArea tArea = new JTextArea();
+        tArea.setEditable(false);
+        tArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
+
+        // Load default view (Alphabetic)
+        tArea.setText(lib.showLibraryAlphabetic());
+
         JScrollPane scrollPane = new JScrollPane(tArea);
-        add(lTitle);
-        add(scrollPane); // Add the scroll pane containing the text area
+
+        // Button Actions
+
+        // Show Alphabetic List
+        bAlphabetic.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                tArea.setText(lib.showLibraryAlphabetic());
+                // Scroll back to top
+                tArea.setCaretPosition(0);
+            }
+        });
+
+        // Action: Show Popularity List
+        bPopularity.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                tArea.setText(lib.showLibraryPopularity());
+                tArea.setCaretPosition(0);
+            }
+        });
+
+        // Add components to the main frame
+        add(pButtons, BorderLayout.NORTH); // Buttons at the top
+        add(scrollPane, BorderLayout.CENTER); // Text area in the middle
     }
 
 //-------------------------------------------------------------------------------------------------------------------------------------------
@@ -371,7 +409,7 @@ public class LibraryGUI extends JFrame {
 
 
 
-    // --- METHOD: Login GUI Initialization ---
+    // METHOD: Login GUI Initialization
     private void initLoginGUI() {
         JLabel lId = new JLabel("Enter User ID:");
         JTextField tId = new JTextField(20);

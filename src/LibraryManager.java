@@ -11,6 +11,9 @@ public class LibraryManager {
     private titleBst titleTree = new titleBst();
     private authorBst authorTree = new authorBst();
 
+    public PopularityHeap popularityHeap = new PopularityHeap(1000); // Maximum capacity for the popularity list
+    //If the library has 1500 books and you reduce the capacity to 1000, when the 1001st book is borrowed, it cannot be added to the popularity list because there is no more space.
+
     public UndoManager undoManager = new UndoManager();
     public UserManager userManager = new UserManager(this, undoManager);
     
@@ -37,7 +40,7 @@ public class LibraryManager {
 
                     Book book = new Book(title, author);
 
-                    // Check if there is a holder ID
+                    // Check for holder ID
                     if (parts.length >= 3) {
                         String holderId = parts[2].trim();
                         if (!holderId.equals("null") && !holderId.isEmpty()) {
@@ -45,10 +48,24 @@ public class LibraryManager {
                             book.setCurrentHolderId(holderId);
                         }
                     }
-                    // ---------------------------------------------
+
+                    //  Check for Borrow Count
+                    if (parts.length >= 4) {
+                        try {
+                            int count = Integer.parseInt(parts[3].trim());
+                            book.setBorrowCount(count);
+                        } catch (NumberFormatException e) {
+                            // ignore
+                        }
+                    }
 
                     titleTree.addByTitle(book);
                     authorTree.addByAuthor(book);
+
+                    //If it's borrowed once, it adds it to the heap.
+                    if (book.getBorrowCount() > 0) {
+                        popularityHeap.addExisting(book);
+                    }
                 }
             }
             System.out.println("System: Data loaded successfully.");
@@ -60,23 +77,34 @@ public class LibraryManager {
     // This method takes parameters directly.
     // It updates the BSTs and saves to the file.
     // Returns true if added successfully, false if duplicate
+    // Main add book logic
+    // This method takes parameters directly.
+    // It updates the BSTs and saves to the file.
+    // Returns true if added successfully, false if duplicate
     public boolean addBook(String title, String author) {
-        String cleanTitle = title.trim().toLowerCase();
-        String cleanAuthor = author.trim().toLowerCase();
+        String cleanTitle = title.trim(); // Removed toLowerCase to keep original casing
+        String cleanAuthor = author.trim();
 
-        if (titleTree.search(cleanTitle).getAuthor() == cleanAuthor) {
+        // Check if book already exists
+        Book existing = titleTree.search(cleanTitle); // Search first
+
+        // Check if 'existing' is not null before checking author to avoid crash
+        if (existing != null && existing.getAuthor().equalsIgnoreCase(cleanAuthor)) {
             System.out.println("Error: Book '" + cleanTitle + "' already exists.");
             return false; // Duplicate found, do not add
         }
 
-        // 2. Create Object
+        //  Create Object
         Book book = new Book(cleanTitle, cleanAuthor);
 
-        // 3. Add to Memory (BSTs)
+        // Add to Memory (BSTs)
         titleTree.addByTitle(book);
         authorTree.addByAuthor(book);
 
-        // 4. Save to File (Appends to the end of txt)
+        // Add to Popularity Heap (tracking starts at 0)
+        popularityHeap.addExisting(book);
+
+        // Save to File (Appends to the end of txt)
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME, true))) {
             writer.write(cleanTitle + "," + cleanAuthor);
             writer.newLine();
@@ -89,8 +117,6 @@ public class LibraryManager {
         // Add to UndoManager the add operation.
         undoManager.addAction(new undoAddBook(this, book));
         return true;
-        
-        
     }
     
     public boolean addBookForUndo(String title, String author){
@@ -205,6 +231,8 @@ public class LibraryManager {
             // Success: User takes the book
             book.setAvailable(false);
             book.setCurrentHolderId(userId);
+
+            popularityHeap.incrementPopularity(book);
 
             // Add to User's history
             User user = userManager.getUser(userId);
@@ -325,6 +353,14 @@ public class LibraryManager {
         } catch (IOException e) {
             System.out.println("Error updating file: " + e.getMessage());
         }
+    }
+    public String showLibraryAlphabetic(){
+        return titleTree.showAlphabetic();
+    }
+
+    // Returns the list sorted by popularity (Most borrowed first)
+    public String showLibraryPopularity(){
+        return popularityHeap.getSortedList();
     }
     
 }
