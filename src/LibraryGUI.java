@@ -38,7 +38,7 @@ public class LibraryGUI extends JFrame {
         }
         else if (option == 5) { // Option for registering new member
             setTitle("Register New Member");
-            setSize(300, 300);
+            setSize(800, 125);
             initRegisterGUI();
         }
         else if (option == 6) { // Option for user login
@@ -61,17 +61,21 @@ public class LibraryGUI extends JFrame {
             setSize(350, 150);
             initSearchUserGUI();
         }
-        else if (option == 12) { // Option for borrow Book
+        else if (option == 11) { // Option for borrow Book
             setTitle("Borrow Book");
             setSize(300, 200);
             initBorrowGUI();
         }
-        else if (option == 13) { // Option for return Book
+        else if (option == 12) { // Option for return Book
             setTitle("Return Book");
             setSize(300, 200);
             initReturnGUI();
         }
         setVisible(true);
+        setAlwaysOnTop(true);
+        toFront();
+        requestFocus();
+        setAlwaysOnTop(false);
     }
 
 //-------------------------------------------------------------------------------------------------------------------------------------------
