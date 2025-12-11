@@ -82,52 +82,44 @@ public class LibraryManager {
     // It updates the BSTs and saves to the file.
     // Returns true if added successfully, false if duplicate
     public boolean addBook(String title, String author) {
-        // Clean the input strings (remove leading/trailing spaces)
         String cleanTitle = title.trim();
         String cleanAuthor = author.trim();
 
-        // Basic Validation: Ensure fields are not empty after trimming
         if (cleanTitle.isEmpty() || cleanAuthor.isEmpty()) {
             System.out.println("Error: Title or Author cannot be empty.");
             return false;
         }
-        // DUPLICATE CHECK START
-        // Since 'titleTree.search' only returns the first match, we double-check using the Author Tree.
-        // Get all books written by this author.
         String authorBooks = authorTree.searchBooks(cleanAuthor);
 
         if (authorBooks != null) {
-            // Check if the specific title exists in the author's book list.
-            // Using toLowerCase() to make it case-insensitive.
+            // searchBooks returns string format "Title: BookName ...".
+            // We use generic contains check (case insensitive).
             if (authorBooks.toLowerCase().contains("title: " + cleanTitle.toLowerCase())) {
                 System.out.println("Error: Book '" + cleanTitle + "' by " + cleanAuthor + " already exists.");
-                return false; // Return false to prevent adding duplicate
+                return false; // Duplicate found!
             }
         }
-        //  DUPLICATE CHECK END
 
-        // Create the new Book object
+        // Create Object
         Book book = new Book(cleanTitle, cleanAuthor);
 
-        // Add to in-memory data structures
-        titleTree.addByTitle(book);       // Add to Title BST
-        authorTree.addByAuthor(book);     // Add to Author BST
-        popularityHeap.addExisting(book); // Add to Popularity Heap (starts at 0)
+        // Add to Memory
+        titleTree.addByTitle(book);
+        authorTree.addByAuthor(book);
+        popularityHeap.addExisting(book);
 
-        // Save to File (Appends to the end of the file)
+        // Save to File
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME, true))) {
             writer.write(cleanTitle + "," + cleanAuthor);
-            writer.newLine(); // Ensure the next book starts on a new line
+            writer.newLine();
         } catch (IOException e) {
             System.out.println("Error saving to file: " + e.getMessage());
-            return false; // Indicate failure due to file error
+            return false;
         }
 
-        // Register action for UNDO functionality
         undoManager.addAction(new undoAddBook(this, book));
-
         System.out.println("Success: Book added -> " + cleanTitle);
-        return true; // Indicate overall success
+        return true;
     }
     
     public boolean addBookForUndo(String title, String author){
