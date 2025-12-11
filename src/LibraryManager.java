@@ -151,26 +151,39 @@ public class LibraryManager {
 
     //   RemoveBook from tree
     //  REMOVE METHOD (Reads all lines, skips the one to delete, rewrites file)
+    // Method to remove a book from the file and memory
     public boolean removeBookFromFile(String titleInput) {
         String titleToRemove = titleInput.trim().toLowerCase();
         ArrayList<String> bookList = new ArrayList<>();
         boolean isFound = false;
-
 
         try (BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
                 String currentTitle = parts[0].trim();
-
+                // Check if this is the book we want to remove
                 if (currentTitle.toLowerCase().equals(titleToRemove.toLowerCase())) {
                     isFound = true;
-                    // Add this action into the undo stack
-                    undoManager.addAction(new undoRemoveBook(this, titleTree.search(currentTitle)));
-                    // Also remove from Memory/BSTs immediately
+
+                    // Retrieve the book object from memory before deleting it
+                    Book bookToRemove = titleTree.search(currentTitle);
+
+                    if (bookToRemove != null) {
+                        // Remove from Popularity Heap to keep statistics accurate
+                        popularityHeap.remove(bookToRemove);
+
+                        // Add this action to the Undo Manager
+                        undoManager.addAction(new undoRemoveBook(this, bookToRemove));
+                    }
+
+                    // Remove from Memory/BSTs
                     titleTree.delete(currentTitle);
-                    if (parts.length > 1) authorTree.delete(parts[1], currentTitle);
-                } else {
+                    if (parts.length > 1) {
+                        authorTree.delete(parts[1], currentTitle);
+                    }
+                }
+                else {
                     bookList.add(line); // Keep this book
                 }
             }
@@ -179,7 +192,7 @@ public class LibraryManager {
             return false;
         }
 
-
+        // Rewrite the file if the book was found and removed
         if (isFound) {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME))) {
                 for (String bookLine : bookList) {
@@ -202,8 +215,15 @@ public class LibraryManager {
     public String searchByAuthor(String author) {
         return authorTree.searchBooks(author.trim());
     }
-    
+
     void removeBook(Book book){
+        if (book == null){
+            return;
+        }
+        // Remove from Popularity Heap
+        popularityHeap.remove(book);
+
+        // Remove from Binary Search Trees
         titleTree.delete(book.getTitle().toLowerCase());
         authorTree.delete(book.getAuthor(), book.getTitle().toLowerCase());
     }
@@ -362,5 +382,6 @@ public class LibraryManager {
     public String showLibraryPopularity(){
         return popularityHeap.getSortedList();
     }
+
     
 }

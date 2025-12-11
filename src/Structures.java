@@ -688,4 +688,31 @@ class PopularityHeap {
         }
         return sb.toString();
     }
+    // Method to remove a specific book from the Heap
+    public void remove(Book book) {
+        int index = -1;
+
+        //  Find the index of the book to remove
+        for (int i = 0; i < size; i++) {
+            if (heap[i] == book) { // Compare references
+                index = i;
+                break;
+            }
+        }
+
+        // If the book is not in the heap, do nothing
+        if (index == -1) return;
+
+        // Replace the element to be removed with the last element
+        heap[index] = heap[size - 1];
+        heap[size - 1] = null; // Help Garbage Collector
+        size--;
+
+        //  Restore the Heap property (Heapify)
+        // Check if we need to move the new element up or down
+        if (index < size) {
+            heapifyUp(index);
+            heapifyDown(index);
+        }
+    }
 }

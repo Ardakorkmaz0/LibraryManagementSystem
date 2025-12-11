@@ -27,6 +27,7 @@ public class LibraryManagementSystem {
             System.out.println("10 - Search User (Open GUI)");
             System.out.println("11 - Borrow Book (Open GUI)");
             System.out.println("12 - Return Book (Open GUI)");
+            System.out.println("13 - All things (Open GUI)  , recommended");
             System.out.println("0 - Exit");
             System.out.print("Select an option: ");
 
@@ -122,6 +123,12 @@ public class LibraryManagementSystem {
                             new LibraryGUI(lib, 12);
                         });
                     }
+                }
+                if (option == 13) {
+                    System.out.println("Opening Dashboard...");
+                    SwingUtilities.invokeLater(() -> {
+                        new UnifiedLibraryGUI(lib);
+                    });
                 }
                 else if (option == 0) {
                     System.out.println("Exiting system...");
