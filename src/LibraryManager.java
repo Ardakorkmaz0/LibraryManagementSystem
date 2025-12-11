@@ -82,41 +82,52 @@ public class LibraryManager {
     // It updates the BSTs and saves to the file.
     // Returns true if added successfully, false if duplicate
     public boolean addBook(String title, String author) {
-        String cleanTitle = title.trim(); // Removed toLowerCase to keep original casing
+        // Clean the input strings (remove leading/trailing spaces)
+        String cleanTitle = title.trim();
         String cleanAuthor = author.trim();
 
-        // Check if book already exists
-        Book existing = titleTree.search(cleanTitle); // Search first
-
-        // Check if 'existing' is not null before checking author to avoid crash
-        if (existing != null && existing.getAuthor().equalsIgnoreCase(cleanAuthor)) {
-            System.out.println("Error: Book '" + cleanTitle + "' already exists.");
-            return false; // Duplicate found, do not add
-        }
-
-        //  Create Object
-        Book book = new Book(cleanTitle, cleanAuthor);
-
-        // Add to Memory (BSTs)
-        titleTree.addByTitle(book);
-        authorTree.addByAuthor(book);
-
-        // Add to Popularity Heap (tracking starts at 0)
-        popularityHeap.addExisting(book);
-
-        // Save to File (Appends to the end of txt)
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME, true))) {
-            writer.write(cleanTitle + "," + cleanAuthor);
-            writer.newLine();
-        } catch (IOException e) {
-            System.out.println("Error saving to file: " + e.getMessage());
+        // Basic Validation: Ensure fields are not empty after trimming
+        if (cleanTitle.isEmpty() || cleanAuthor.isEmpty()) {
+            System.out.println("Error: Title or Author cannot be empty.");
             return false;
         }
+        // DUPLICATE CHECK START
+        // Since 'titleTree.search' only returns the first match, we double-check using the Author Tree.
+        // Get all books written by this author.
+        String authorBooks = authorTree.searchBooks(cleanAuthor);
+
+        if (authorBooks != null) {
+            // Check if the specific title exists in the author's book list.
+            // Using toLowerCase() to make it case-insensitive.
+            if (authorBooks.toLowerCase().contains("title: " + cleanTitle.toLowerCase())) {
+                System.out.println("Error: Book '" + cleanTitle + "' by " + cleanAuthor + " already exists.");
+                return false; // Return false to prevent adding duplicate
+            }
+        }
+        //  DUPLICATE CHECK END
+
+        // Create the new Book object
+        Book book = new Book(cleanTitle, cleanAuthor);
+
+        // Add to in-memory data structures
+        titleTree.addByTitle(book);       // Add to Title BST
+        authorTree.addByAuthor(book);     // Add to Author BST
+        popularityHeap.addExisting(book); // Add to Popularity Heap (starts at 0)
+
+        // Save to File (Appends to the end of the file)
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME, true))) {
+            writer.write(cleanTitle + "," + cleanAuthor);
+            writer.newLine(); // Ensure the next book starts on a new line
+        } catch (IOException e) {
+            System.out.println("Error saving to file: " + e.getMessage());
+            return false; // Indicate failure due to file error
+        }
+
+        // Register action for UNDO functionality
+        undoManager.addAction(new undoAddBook(this, book));
 
         System.out.println("Success: Book added -> " + cleanTitle);
-        // Add to UndoManager the add operation.
-        undoManager.addAction(new undoAddBook(this, book));
-        return true;
+        return true; // Indicate overall success
     }
     
     public boolean addBookForUndo(String title, String author){
