@@ -25,7 +25,8 @@ public class Book {
         this.title = title;
         this.author = author;
         // Generate ID
-        this.id = title.substring(0, 2) + author.substring(0, 2) + (Integer.toString(230316058 / Integer.parseInt(Long.toString(System.currentTimeMillis()).substring(9))).substring(1, 5));
+        this.id = title.substring(0, 2) + author.substring(0, 2) + 
+        (Integer.toString(230316058 / Integer.parseInt(Long.toString(System.currentTimeMillis()).substring(9))).substring(1, 5));
         this.borrowCount = 0;
         // Default state: Available
         this.isAvailable = true;

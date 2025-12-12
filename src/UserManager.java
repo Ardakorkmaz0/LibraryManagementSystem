@@ -139,9 +139,9 @@ public class UserManager {
 
         // Remove from Hash Table
         userTable.remove(id);
-        // ---------------------------------------------------------------------------
-        // NOT COMPLETED !!! undoManager.addAction(new undoRemoveUser(lib, id));     |
-        // ---------------------------------------------------------------------------
+
+        undoManager.addAction(new undoRemoveUser(lib, id));
+
         // It will be gone from login/memory (Hash Table) which is the critical part.
         return removeUserFromFile(id);
     }
