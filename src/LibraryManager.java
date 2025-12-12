@@ -89,21 +89,17 @@ public class LibraryManager {
             System.out.println("Error: Title or Author cannot be empty.");
             return false;
         }
-        String authorBooks = authorTree.searchBooks(cleanAuthor);
 
-        if (authorBooks != null) {
-            // searchBooks returns string format "Title: BookName ...".
-            // We use generic contains check (case insensitive).
-            if (authorBooks.toLowerCase().contains("title: " + cleanTitle.toLowerCase())) {
-                System.out.println("Error: Book '" + cleanTitle + "' by " + cleanAuthor + " already exists.");
-                return false; // Duplicate found!
-            }
+        // Since we want unique titles, we search the titleTree first.
+        if (titleTree.search(cleanTitle) != null) {
+            System.out.println("Error: A book with the title '" + cleanTitle + "' already exists.");
+            return false;
         }
 
         // Create Object
         Book book = new Book(cleanTitle, cleanAuthor);
 
-        // Add to Memory
+        // Add to Memory (BSTs)
         titleTree.addByTitle(book);
         authorTree.addByAuthor(book);
         popularityHeap.addExisting(book);
