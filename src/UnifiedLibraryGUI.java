@@ -2,12 +2,15 @@ package librarymanagementsystem;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 public class UnifiedLibraryGUI extends JFrame {
 
     LibraryManager lib;
+
+    // Global variable to access the text area from anywhere
+    private JTextArea inventoryArea;
 
     public UnifiedLibraryGUI(LibraryManager lib) {
         this.lib = lib;
@@ -53,6 +56,33 @@ public class UnifiedLibraryGUI extends JFrame {
 
         mainTabs.addTab("System", systemTabs);
 
+        //  Add Listeners to Auto-Refresh Inventory
+
+        // Listen for changes inside Book Management tabs (e.g., clicking "Inventory")
+        bookTabs.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                // If the selected tab is "Inventory" (Index 3), refresh it
+                if (bookTabs.getSelectedIndex() == 3) {
+                    refreshInventory();
+                }
+            }
+        });
+
+        // Listen for changes in Main Tabs (e.g., coming back from "Circulation")
+        mainTabs.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                // If user switches back to "Book Management" (Index 0)
+                if (mainTabs.getSelectedIndex() == 0) {
+                    // And if the internal tab is already on "Inventory", refresh it
+                    if (bookTabs.getSelectedIndex() == 3) {
+                        refreshInventory();
+                    }
+                }
+            }
+        });
+
         // Add everything to the frame
         add(mainTabs, BorderLayout.CENTER);
 
@@ -62,6 +92,13 @@ public class UnifiedLibraryGUI extends JFrame {
         requestFocus();
         setAlwaysOnTop(false);
 
+    }
+    // Method to Refresh Data
+    private void refreshInventory() {
+        if (inventoryArea != null) {
+            inventoryArea.setText(lib.showLibraryAlphabetic());
+            inventoryArea.setCaretPosition(0); // Scroll to top
+        }
     }
 
     // Tab: Add a new book to the library
@@ -88,6 +125,8 @@ public class UnifiedLibraryGUI extends JFrame {
                     JOptionPane.showMessageDialog(this, "Book Added!");
                     // Clear fields after success
                     tTitle.setText(""); tAuthor.setText("");
+                    // Auto-refresh immediately (though tab switch handles it too)
+                    refreshInventory();
                 } else {
                     JOptionPane.showMessageDialog(this, "Error: Duplicate Book!");
                 }
@@ -112,6 +151,7 @@ public class UnifiedLibraryGUI extends JFrame {
             if(success){
                 JOptionPane.showMessageDialog(this, "Book Removed!");
                 tTitle.setText("");
+                refreshInventory(); // Update list
             }
             else{
                 JOptionPane.showMessageDialog(this, "Book not found.");
@@ -164,22 +204,23 @@ public class UnifiedLibraryGUI extends JFrame {
         JButton bPop = new JButton("Sort Popularity");
         topPanel.add(bAlpha); topPanel.add(bPop);
 
-        JTextArea area = new JTextArea();
-        area.setFont(new Font("Monospaced", Font.PLAIN, 12));
-        area.setText(lib.showLibraryAlphabetic()); // Default view on load
+        // Initialize the global inventoryArea
+        inventoryArea = new JTextArea();
+        inventoryArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
+        inventoryArea.setText(lib.showLibraryAlphabetic()); // Default view on load
+        inventoryArea.setEditable(false); // Make it read-only
 
         bAlpha.addActionListener(e -> {
-            area.setText(lib.showLibraryAlphabetic());
-            area.setCaretPosition(0); // Reset scroll to top
+            refreshInventory(); // Re-use the refresh logic
         });
 
         bPop.addActionListener(e -> {
-            area.setText(lib.showLibraryPopularity());
-            area.setCaretPosition(0); // Reset scroll to top
+            inventoryArea.setText(lib.showLibraryPopularity());
+            inventoryArea.setCaretPosition(0); // Reset scroll to top
         });
 
         panel.add(topPanel, BorderLayout.NORTH);
-        panel.add(new JScrollPane(area), BorderLayout.CENTER);
+        panel.add(new JScrollPane(inventoryArea), BorderLayout.CENTER);
         return panel;
     }
 
@@ -211,7 +252,7 @@ public class UnifiedLibraryGUI extends JFrame {
                 User u = lib.userManager.registerUser(tName.getText(), tSurname.getText(), age);
                 JOptionPane.showMessageDialog(this, "Registered! ID: " + u.getId());
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "Invalid Age!");
+                JOptionPane.showMessageDialog(this, "Invalid!");
             }
         });
         return panel;
@@ -351,6 +392,9 @@ public class UnifiedLibraryGUI extends JFrame {
             // Update label to show what comes next in the stack
             lLast.setText("Last Action: " + lib.undoManager.getLastActionName());
             JOptionPane.showMessageDialog(this, "Undo Performed.");
+
+            // Refresh inventory in case an "Add Book" was undone
+            refreshInventory();
         });
 
         panel.add(bUndo);
