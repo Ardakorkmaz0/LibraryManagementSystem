@@ -11,7 +11,6 @@ public class LibraryManagementSystem {
         UserManager userManager = lib.userManager;
 
         boolean isRunning = true;
-
         // Loop to keep the menu active
         while (isRunning) {
             System.out.println("--- Main Menu ---");
@@ -21,15 +20,15 @@ public class LibraryManagementSystem {
             System.out.println("4 - Show Library (Open GUI)");
             System.out.println("5 - Register New User (Open GUI)");
             System.out.println("6 - Login (Open GUI)");
-            System.out.println("7 - Logout (Now Console)");
+            System.out.println("7 - Logout (Console)");
             System.out.println("8 - Remove User (Open GUI)");
             System.out.println("9 - Undo Operation (Open GUI)");
             System.out.println("10 - Search User (Open GUI)");
             System.out.println("11 - Borrow Book (Open GUI)");
             System.out.println("12 - Return Book (Open GUI)");
-            System.out.println("13 - All things (Open GUI)  , recommended");
+            System.out.println("13 - All things (Open GUI)(Recommended)");
             System.out.println("0 - Exit");
-            System.out.print("Select an option: ");
+            System.out.print("Select an option: "); // Enter a value between 0 and 13.
 
             // Validate if the input is an integer
             if (sc.hasNextInt()) {
@@ -81,6 +80,7 @@ public class LibraryManagementSystem {
                     });
                 }
                 else if (option == 7) {
+                    // Open UI in mode 7
                     System.out.println("Loging out...");
                     userManager.logout();
 
@@ -108,6 +108,7 @@ public class LibraryManagementSystem {
                 }
                 else if(option == 11) {
                     if(lib.userManager.getActiveUser() == null){
+                        // Open UI in mode 11
                         System.out.println("ERROR: You must LOGIN first (Option 6).");
                     } else {
                         SwingUtilities.invokeLater(() -> {
@@ -117,6 +118,7 @@ public class LibraryManagementSystem {
                 }
                 else if(option == 12) {
                     if (lib.userManager.getActiveUser() == null) {
+                        // Open UI in mode 12
                         System.out.println("ERROR: You must LOGIN first (Option 6).");
                     } else {
                         SwingUtilities.invokeLater(() -> {
@@ -125,12 +127,14 @@ public class LibraryManagementSystem {
                     }
                 }
                 if (option == 13) {
+                    // Open UI in mode 13
                     System.out.println("Opening Dashboard...");
                     SwingUtilities.invokeLater(() -> {
                         new UnifiedLibraryGUI(lib);
                     });
                 }
                 else if (option == 0) {
+                    // Open UI in mode 0
                     System.out.println("Exiting system...");
                     isRunning = false; // Break the loop
                 }
