@@ -51,8 +51,9 @@ public class UnifiedLibraryGUI extends JFrame {
 
         // Section 4: System (Login/Undo)
         JTabbedPane systemTabs = new JTabbedPane();
+        JPanel undoPanel = createUndoPanel();
         systemTabs.addTab("Login", createLoginPanel());
-        systemTabs.addTab("Undo", createUndoPanel());
+        systemTabs.addTab("Undo", undoPanel);
 
         mainTabs.addTab("System", systemTabs);
 
@@ -69,6 +70,32 @@ public class UnifiedLibraryGUI extends JFrame {
             }
         });
 
+        // Listen for changes inside System Tabs (e.g. Clicking "Undo")
+        systemTabs.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                // Check if the selected tab is "Undo" (Index 1 of systemTabs)
+                if (systemTabs.getSelectedIndex() == 1) {
+                    // Retrieve the label we stored in client properties from the 'undoPanel' variable
+                    JLabel lStatus = (JLabel) undoPanel.getClientProperty("statusLabel");
+
+                    if (lStatus != null) {
+                        // Fetch the latest action name from the backend
+                        String lastAction = lib.undoManager.getLastActionName();
+
+                        // Debugging: Print to console to ensure this code runs
+                        System.out.println("Refreshing Undo GUI. Action found: " + lastAction);
+
+                        if (lastAction.isEmpty()) {
+                            lStatus.setText("No actions to undo.");
+                        } else {
+                            lStatus.setText("Last Action: " + lastAction);
+                        }
+                    }
+                }
+            }
+        });
+
         // Listen for changes in Main Tabs (e.g., coming back from "Circulation")
         mainTabs.addChangeListener(new ChangeListener() {
             @Override
@@ -78,6 +105,20 @@ public class UnifiedLibraryGUI extends JFrame {
                     // And if the internal tab is already on "Inventory", refresh it
                     if (bookTabs.getSelectedIndex() == 3) {
                         refreshInventory();
+                    }
+                }
+
+                //  If user switches directly to "System" tab (Index 3)
+                if (mainTabs.getSelectedIndex() == 3) {
+                    // If the inner tab is already on "Undo", trigger the update manually
+                    if (systemTabs.getSelectedIndex() == 1) {
+                        // We copy the logic from above to ensure it updates immediately
+                        JLabel lStatus = (JLabel) undoPanel.getClientProperty("statusLabel");
+                        if (lStatus != null) {
+                            String lastAction = lib.undoManager.getLastActionName();
+                            if (lastAction.isEmpty()) lStatus.setText("No actions to undo.");
+                            else lStatus.setText("Last Action: " + lastAction);
+                        }
                     }
                 }
             }
@@ -91,7 +132,6 @@ public class UnifiedLibraryGUI extends JFrame {
         toFront();
         requestFocus();
         setAlwaysOnTop(false);
-
     }
     // Method to Refresh Data
     private void refreshInventory() {
@@ -383,22 +423,48 @@ public class UnifiedLibraryGUI extends JFrame {
     }
     // Tab: Undo the last transaction
     private JPanel createUndoPanel() {
-        JPanel panel = new JPanel(new FlowLayout());
-        JButton bUndo = new JButton("UNDO Last Action");
-        JLabel lLast = new JLabel("Last Action: " + lib.undoManager.getLastActionName());
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        // Get the reference to the UndoManager from the LibraryManager
+        UndoManager manager = lib.undoManager;
+        // Create a Label to show the last action name
+        JLabel lStatus = new JLabel();
+        lStatus.setAlignmentX(Component.CENTER_ALIGNMENT); // Center alignment
+        lStatus.setFont(new Font("Arial", Font.BOLD, 14));
+        // Check the current status immediately (Initial State)
+        String lastAction = manager.getLastActionName();
+        if (lastAction.isEmpty()) {
+            lStatus.setText("No actions to undo.");
+        } else {
+            lStatus.setText("Last Action: " + lastAction);
+        }
+        JButton bUndo = new JButton("Confirm Undo");
+        bUndo.setAlignmentX(Component.CENTER_ALIGNMENT); // Center alignment
 
+        // calling dispose() here would close the entire application.
+        // Add Action Listener to handle the click
         bUndo.addActionListener(e -> {
-            lib.undoManager.undo();
-            // Update label to show what comes next in the stack
-            lLast.setText("Last Action: " + lib.undoManager.getLastActionName());
-            JOptionPane.showMessageDialog(this, "Undo Performed.");
-
-            // Refresh inventory in case an "Add Book" was undone
+            // Check if there is actually something to undo
+            if (manager.getLastActionName().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "There is no action left to undo!", "Warning", JOptionPane.WARNING_MESSAGE);
+                lStatus.setText("No actions to undo.");
+                return;
+            }
+            manager.undo();
             refreshInventory();
+            JOptionPane.showMessageDialog(this, "Undo operation completed successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
+            String nextAction = manager.getLastActionName();
+            if (nextAction.isEmpty()) {
+                lStatus.setText("No actions to undo.");
+            } else {
+                lStatus.setText("Next Undo: " + nextAction);
+            }
         });
-
+        panel.add(Box.createVerticalStrut(50));
+        panel.add(lStatus);
+        panel.add(Box.createVerticalStrut(20));
         panel.add(bUndo);
-        panel.add(lLast);
+        panel.putClientProperty("statusLabel", lStatus);
         return panel;
     }
 }
