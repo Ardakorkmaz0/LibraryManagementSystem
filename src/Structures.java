@@ -553,6 +553,7 @@ class stack {
     
     UndoAction peek() {
         if(top == null){
+
             return null;
         }
         UndoAction action = (UndoAction) top.data;
