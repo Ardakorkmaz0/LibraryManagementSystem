@@ -83,9 +83,6 @@ public class UnifiedLibraryGUI extends JFrame {
                         // Fetch the latest action name from the backend
                         String lastAction = lib.undoManager.getLastActionName();
 
-                        // Debugging: Print to console to ensure this code runs
-                        System.out.println("Refreshing Undo GUI. Action found: " + lastAction);
-
                         if (lastAction.isEmpty()) {
                             lStatus.setText("No actions to undo.");
                         } else {

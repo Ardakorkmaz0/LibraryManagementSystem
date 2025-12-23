@@ -1,0 +1,163 @@
+The Great Gatsby,F. Scott Fitzgerald,null,0
+To Kill a Mockingbird,Harper Lee,null,0
+1984,George Orwell,null,0
+Pride and Prejudice,Jane Austen,null,0
+The Catcher in the Rye,J.D. Salinger,null,0
+The Hobbit,J.R.R. Tolkien,null,0
+Fahrenheit 451,Ray Bradbury,null,0
+Lord of the Flies,William Golding,null,0
+Animal Farm,George Orwell,null,0
+Wuthering Heights,Emily Bronte,null,0
+The Grapes of Wrath,John Steinbeck,null,0
+Catch-22,Joseph Heller,null,0
+Slaughterhouse-Five,Kurt Vonnegut,null,0
+Brave New World,Aldous Huxley,null,0
+The Lord of the Rings,J.R.R. Tolkien,null,0
+Jane Eyre,Charlotte Bronte,null,0
+Of Mice and Men,John Steinbeck,null,0
+Gone with the Wind,Margaret Mitchell,null,0
+One Hundred Years of Solitude,Gabriel Garcia Marquez,null,0
+The Alchemist,Paulo Coelho,null,0
+Crime and Punishment,Fyodor Dostoevsky,null,0
+The Brothers Karamazov,Fyodor Dostoevsky,null,0
+War and Peace,Leo Tolstoy,null,0
+Anna Karenina,Leo Tolstoy,null,0
+Madame Bovary,Gustave Flaubert,null,0
+The Stranger,Albert Camus,null,0
+The Metamorphosis,Franz Kafka,null,0
+The Trial,Franz Kafka,null,0
+Les Miserables,Victor Hugo,null,0
+The Hunchback of Notre-Dame,Victor Hugo,null,0
+The Count of Monte Cristo,Alexandre Dumas,null,0
+The Three Musketeers,Alexandre Dumas,null,0
+Great Expectations,Charles Dickens,null,0
+Oliver Twist,Charles Dickens,null,0
+Moby Dick,Herman Melville,null,0
+The Scarlet Letter,Nathaniel Hawthorne,null,0
+Frankenstein,Mary Shelley,null,0
+Dracula,Bram Stoker,null,0
+The Picture of Dorian Gray,Oscar Wilde,null,0
+The Adventures of Huckleberry Finn,Mark Twain,null,0
+The Adventures of Tom Sawyer,Mark Twain,null,0
+Alice's Adventures in Wonderland,Lewis Carroll,null,0
+The Little Prince,Antoine de Saint-Exupery,null,0
+Don Quixote,Miguel de Cervantes,null,0
+Ulysses,James Joyce,null,0
+Heart of Darkness,Joseph Conrad,null,0
+The Old Man and the Sea,Ernest Hemingway,null,0
+For Whom the Bell Tolls,Ernest Hemingway,null,0
+A Farewell to Arms,Ernest Hemingway,null,0
+Beloved,Toni Morrison,null,0
+Invisible Man,Ralph Ellison,null,0
+Native Son,Richard Wright,null,0
+On the Road,Jack Kerouac,null,0
+The Bell Jar,Sylvia Plath,null,0
+Lolita,Vladimir Nabokov,null,0
+Dune,Frank Herbert,null,0
+Foundation,Isaac Asimov,null,0
+I Robot,Isaac Asimov,null,0
+Neuromancer,William Gibson,null,0
+Snow Crash,Neal Stephenson,null,0
+The Hitchhiker's Guide to the Galaxy,Douglas Adams,null,0
+Ender's Game,Orson Scott Card,null,0
+Do Androids Dream of Electric Sheep?,Philip K. Dick,null,0
+2001: A Space Odyssey,Arthur C. Clarke,null,0
+The War of the Worlds,H.G. Wells,null,0
+The Time Machine,H.G. Wells,null,0
+Journey to the Center of the Earth,Jules Verne,null,0
+Twenty Thousand Leagues Under the Sea,Jules Verne,null,0
+Around the World in Eighty Days,Jules Verne,null,0
+Harry Potter and the Sorcerer's Stone,J.K. Rowling,null,0
+Harry Potter and the Chamber of Secrets,J.K. Rowling,null,0
+Harry Potter and the Prisoner of Azkaban,J.K. Rowling,null,0
+Harry Potter and the Goblet of Fire,J.K. Rowling,null,0
+Harry Potter and the Order of the Phoenix,J.K. Rowling,null,0
+Harry Potter and the Half-Blood Prince,J.K. Rowling,null,0
+Harry Potter and the Deathly Hallows,J.K. Rowling,null,0
+The Chronicles of Narnia,C.S. Lewis,null,0
+The Golden Compass,Philip Pullman,null,0
+Eragon,Christopher Paolini,null,0
+Percy Jackson and the Lightning Thief,Rick Riordan,null,0
+The Hunger Games,Suzanne Collins,null,0
+Catching Fire,Suzanne Collins,null,0
+Mockingjay,Suzanne Collins,null,0
+Divergent,Veronica Roth,null,0
+Twilight,Stephenie Meyer,null,0
+The Da Vinci Code,Dan Brown,null,0
+Angels and Demons,Dan Brown,null,0
+Inferno,Dan Brown,null,0
+The Girl with the Dragon Tattoo,Stieg Larsson,null,0
+Gone Girl,Gillian Flynn,null,0
+The Shining,Stephen King,null,0
+It,Stephen King,null,0
+Misery,Stephen King,null,0
+Carrie,Stephen King,null,0
+The Green Mile,Stephen King,null,0
+Pet Sematary,Stephen King,null,0
+The Stand,Stephen King,null,0
+American Gods,Neil Gaiman,null,0
+Good Omens,Neil Gaiman,null,0
+Coraline,Neil Gaiman,null,0
+Life of Pi,Yann Martel,null,0
+The Kite Runner,Khaled Hosseini,null,0
+A Thousand Splendid Suns,Khaled Hosseini,null,0
+Sapiens,Yuval Noah Harari,null,0
+Thinking Fast and Slow,Daniel Kahneman,null,0
+A Game of Thrones,George R.R. Martin,null,0
+A Clash of Kings,George R.R. Martin,null,0
+A Storm of Swords,George R.R. Martin,null,0
+A Feast for Crows,George R.R. Martin,null,0
+A Dance with Dragons,George R.R. Martin,null,0
+The Name of the Wind,Patrick Rothfuss,null,0
+The Wise Man's Fear,Patrick Rothfuss,null,0
+The Way of Kings,Brandon Sanderson,null,0
+Words of Radiance,Brandon Sanderson,null,0
+Oathbringer,Brandon Sanderson,null,0
+Mistborn: The Final Empire,Brandon Sanderson,null,0
+The Well of Ascension,Brandon Sanderson,null,0
+The Hero of Ages,Brandon Sanderson,null,0
+The Eye of the World,Robert Jordan,null,0
+The Great Hunt,Robert Jordan,null,0
+The Dragon Reborn,Robert Jordan,null,0
+The Shadow Rising,Robert Jordan,null,0
+Dune Messiah,Frank Herbert,null,0
+Children of Dune,Frank Herbert,null,0
+God Emperor of Dune,Frank Herbert,null,0
+Heretics of Dune,Frank Herbert,null,0
+Chapterhouse: Dune,Frank Herbert,null,0
+Foundation and Empire,Isaac Asimov,null,0
+Second Foundation,Isaac Asimov,null,0
+Foundation's Edge,Isaac Asimov,null,0
+Hyperion,Dan Simmons,null,0
+The Fall of Hyperion,Dan Simmons,null,0
+Endymion,Dan Simmons,null,0
+The Rise of Endymion,Dan Simmons,null,0
+Norwegian Wood,Haruki Murakami,null,0
+Kafka on the Shore,Haruki Murakami,null,0
+1Q84,Haruki Murakami,null,0
+The Wind-Up Bird Chronicle,Haruki Murakami,null,0
+Sputnik Sweetheart,Haruki Murakami,null,0
+After Dark,Haruki Murakami,null,0
+No Country for Old Men,Cormac McCarthy,null,0
+The Road,Cormac McCarthy,null,0
+Blood Meridian,Cormac McCarthy,null,0
+Fight Club,Chuck Palahniuk,null,0
+Choke,Chuck Palahniuk,null,0
+American Psycho,Bret Easton Ellis,null,0
+The Silence of the Lambs,Thomas Harris,null,0
+Red Dragon,Thomas Harris,null,0
+Hannibal,Thomas Harris,null,0
+The Godfather,Mario Puzo,null,0
+Jurassic Park,Michael Crichton,null,0
+The Lost World,Michael Crichton,null,0
+Sphere,Michael Crichton,null,0
+Congo,Michael Crichton,null,0
+Timeline,Michael Crichton,null,0
+Murder on the Orient Express,Agatha Christie,null,0
+And Then There Were None,Agatha Christie,null,0
+The Murder of Roger Ackroyd,Agatha Christie,null,0
+Death on the Nile,Agatha Christie,null,0
+The ABC Murders,Agatha Christie,null,0
+Sherlock Holmes: A Study in Scarlet,Arthur Conan Doyle,null,0
+Sherlock Holmes: The Sign of Four,Arthur Conan Doyle,null,0
+Sherlock Holmes: The Hound of the Baskervilles,Arthur Conan Doyle,null,0
