@@ -40,3 +40,43 @@ This mechanism helps to:
 * Keep data consistent
 * Reduce user mistakes
 * Simulate undo logic used in real-world applications
+
+---
+
+## How to Run
+
+### Windows (PowerShell)
+```powershell
+# 1. Clone the repository from GitHub
+git clone https://github.com/Ardakorkmaz0/LibraryManagementSystem.git
+
+# 2. Navigate into the project directory
+cd LibraryManagementSystem
+
+# 3. Create a bin directory for compiled files
+New-Item -ItemType Directory -Force -Path bin
+
+# 4. Compile the Java source files
+javac -d bin src/librarymanagementsystem/*.java
+
+# 5. Run the application
+java -cp bin librarymanagementsystem.LibraryManagementSystem
+```
+
+### macOS / Linux (Bash)
+```bash
+# 1. Clone the repository from GitHub
+git clone https://github.com/Ardakorkmaz0/LibraryManagementSystem.git
+
+# 2. Navigate into the project directory
+cd LibraryManagementSystem
+
+# 3. Create a bin directory for compiled files
+mkdir -p bin
+
+# 4. Compile the Java source files
+javac -d bin src/librarymanagementsystem/*.java
+
+# 5. Run the application
+java -cp bin librarymanagementsystem.LibraryManagementSystem
+```
